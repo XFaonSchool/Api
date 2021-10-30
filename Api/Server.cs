@@ -1,4 +1,5 @@
-﻿using Exolix.ApiHost;
+﻿using Api.Handlers.Account;
+using Exolix.ApiHost;
 using Exolix.DataBase;
 using Exolix.Json;
 using Exolix.Terminal;
@@ -6,6 +7,9 @@ using Exolix.Terminal;
 public class GlobalStorage
 {
     public static ApiHost? Api;
+	public static DataBaseApi? DataBase;
+	public static ServerConfig? Config;
+	public static string Name = "Axeri";
 }
 
 public class ConfigDataBaseSettings
@@ -15,13 +19,14 @@ public class ConfigDataBaseSettings
 
 public class ConfigApiSettings
 {
-	public int? Port = new ApiHostSettings().Port;
+	public int? Port = 1427;
 }
 
 public class ServerConfig
 {
 	public ConfigDataBaseSettings DataBase = new ConfigDataBaseSettings();
 	public ConfigApiSettings Api = new ConfigApiSettings();
+	public string DataBaseName = "Axeri";
 }
 
 class Server
@@ -42,9 +47,11 @@ class Server
 			config = new ServerConfig();
 		}
 
+		GlobalStorage.Config = config;
+		GlobalStorage.Name = config.DataBaseName;
         Logger.Info("Connecting to API database");
 
-        DataBaseApi db = new DataBaseApi(new DataBaseApiSettings
+        DataBaseApi db = GlobalStorage.DataBase = new DataBaseApi(new DataBaseApiSettings
         {
             ConnectAddress = config.DataBase.ConnectAddress
         });
@@ -66,12 +73,14 @@ class Server
 
             ApiHost api = GlobalStorage.Api = new ApiHost(new ApiHostSettings
             {
-                Port = 9080
+                Port = config.Api.Port
             });
 
             api.OnReady(() =>
             {
                 Logger.Success("Server is ready");
+
+				new Account();
 
                 api.OnOpen((connection) =>
                 {
