@@ -1,7 +1,11 @@
 import { ExolixApi } from "@axeridev/exolix-node";
+import { Account } from "./Account/Account";
 
 export class AxeriApi {
 	private api: ExolixApi;
+	private onReadyEvents: (() => void)[] = [];
+
+	public account = new Account();
 
 	public constructor() {
 		this.api = new ExolixApi({
@@ -9,10 +13,25 @@ export class AxeriApi {
 		});
 
 		this.api.onOpen(() => {
-			console.log("opened");
+			this.triggerOnReadyEvents();
 		});
 
+		// TODO: Wait for OnReady support for ExolixAPI
+		//this.api.onReady(() => {
+		//	this.triggerOnReadyEvents();
+		//});
+	}
+
+	public run() {
 		this.api.run();
+	}
+
+	public onReady(action: () => void) {
+		this.onReadyEvents.push(action);
+	}
+
+	public triggerOnReadyEvents() {
+		this.onReadyEvents.forEach((event) => event());
 	}
 }
 
