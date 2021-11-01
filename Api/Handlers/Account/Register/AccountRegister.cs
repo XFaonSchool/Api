@@ -27,8 +27,7 @@ namespace Api.Handlers.Account.Register
 				
 				if (message.UserName != null && message.DisplayName != null && message.Password != null)
 				{
-
-
+					Logger.Info("Usrn: " + message.UserName + " DsplNme: " + message.DisplayName);
 					return;
 				}
 			});
