@@ -5,12 +5,14 @@ export class AxeriApi {
 	private api: ExolixApi;
 	private onReadyEvents: (() => void)[] = [];
 
-	public account = new Account();
+	public account: Account;
 
 	public constructor() {
 		this.api = new ExolixApi({
 			port: 7090
 		});
+
+		this.account = new Account(this.api);
 
 		this.api.onOpen(() => {
 			this.triggerOnReadyEvents();
