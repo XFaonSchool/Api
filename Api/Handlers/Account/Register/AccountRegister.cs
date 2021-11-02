@@ -38,9 +38,9 @@ namespace Api.Handlers.Account.Register
 
 					GlobalStorage.DataBase?.InsertRecord(GlobalStorage.Name, "Accounts", new BsonDocument
 					{
-						{ "Email", message.Email },
+						{ "Email", message.Email.ToLower() },
 						{ "Password", message.Password },
-						{ "UserName", message.UserName },
+						{ "UserName", message.UserName.ToLower() },
 						{ "DisplayName", message.DisplayName },
 						{ "Token", accountToken },
 						{ "EmailVerified", false },

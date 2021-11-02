@@ -1,4 +1,5 @@
 import { AxeriApi } from "@axeridev/axeri-node-api/app";
+import readline from "readline";
 
 const axeri = new AxeriApi();
 
@@ -24,13 +25,32 @@ axeri.onReady(() => {
 	});
 
 	axeri.account.onLoginGetTokenSuccess((token) => {
-		console.log(token);
 		axeri.account.loginToken(token);
 	});
 
-	axeri.account.loginGetToken({
-		EmailUserName: "XFaon",
-		Password: "pass-word"
+	axeri.account.onLoginGetTokenFailed((reason) => {
+		console.log("Failed to login because reason '" + reason + "'");
+	});
+
+	const rl = readline.createInterface({
+		input: process.stdin,
+		output: process.stdout
+	});
+
+	let username = "";
+	let password = "";
+
+	rl.question("UserName: ", (ans) => {
+		username = ans;
+
+		rl.question("Password: ", (ans) => {
+			password = ans;
+
+			axeri.account.loginGetToken({
+				EmailUserName: username,
+				Password: password
+			});
+		});
 	});
 });
 

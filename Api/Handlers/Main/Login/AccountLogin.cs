@@ -31,6 +31,7 @@ namespace Api.Handlers.Main.Login
 		public string UserIdentifier = "";
 		public string Node = "";
 		public string ConnectionIdentifier = "";
+		public string GuildListener = "";
 	}
 
 	public class AccountLogin
@@ -58,11 +59,11 @@ namespace Api.Handlers.Main.Login
 						{ "ConnectionIdentifier", connection.Identifier }
 					});
 
-						connection.Send<LoginSuccessMessage>("login _reply:success", new LoginSuccessMessage { });
+						connection.Send("login _reply:success", new LoginSuccessMessage { });
 					}
 				} catch (Exception)
 				{
-					connection.Send<LoginFailedMessage>("login _reply:failed", new LoginFailedMessage { });
+					connection.Send("login _reply:failed", new LoginFailedMessage { });
 				}
 			});
 		}

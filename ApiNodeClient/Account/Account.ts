@@ -20,12 +20,17 @@ export interface LoginDetails {
 	Password: string;
 }
 
+export interface LoginErrorResponse {
+	EmailUserName: string;
+}
+
 export class Account {
 	private api: ExolixApi;
 	private onRegisterSuccessEvents: ((token: string) => void)[] = [];
 	private onLoginGetTokenSuccessEvents: ((token: string) => void)[] = [];
 	private onLoginTokenSuccessEvents: (() => void)[] = [];
 	private onLoginTokenFailedEvents: (() => void)[] = [];
+	private onLoginGetTokenFailedEvents: ((reason: "bad-auth" | "invalid-account") => void)[] = [];
 
 	public isLoggedIn = false;
 
@@ -40,6 +45,8 @@ export class Account {
 		this.api.onMessage("login _reply:failed", () => this.triggerOnLoginTokenFailed());
 
 		this.api.onMessage<LoginGetTokenMessage>("account:login-get-token _reply:success", (message) => this.triggerOnLoginGetTokenSuccess(message.Token));
+		this.api.onMessage<LoginErrorResponse>("account:login-get-token _reply:bad-auth", (message) => this.triggerOnLoginGetTokenFailed("bad-auth"));
+		this.api.onMessage<LoginErrorResponse>("account:login-get-token _reply:does-not-exist", (message) => this.triggerOnLoginGetTokenFailed("invalid-account"));
 	}
 
 	public registerNew(details: AccountRegisterDetails) {
@@ -74,6 +81,14 @@ export class Account {
 
 	public triggerOnLoginGetTokenSuccess(token: string) {
 		this.onLoginGetTokenSuccessEvents.forEach((event) => event(token));
+	}
+
+	public onLoginGetTokenFailed(action: (reason: "bad-auth" | "invalid-account") => void) {
+		this.onLoginGetTokenFailedEvents.push(action);
+	}
+
+	public triggerOnLoginGetTokenFailed(reason: "bad-auth" | "invalid-account") {
+		this.onLoginGetTokenFailedEvents.forEach((event) => event(reason));
 	}
 
 	public triggerOnLoginTokenSuccess() {
