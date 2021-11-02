@@ -15,7 +15,7 @@ export class Guild {
 
 		api.onMessage<GuildJoinReturnMessage>("guild:join _reply:success", (message) => this.triggerOnJoinSuccessEvents(message.Identifier));
 		api.onMessage<GuildJoinReturnMessage>("guild:join _reply:banned", (message) => this.triggerOnJoinFailedEvents(message.Identifier, "banned"));
-		api.onMessage<GuildJoinReturnMessage>("guild:join _reply:member-already-exist", (message) => this.triggerOnJoinFailedEvents(message.Identifier, "member-already-exists"));
+		api.onMessage<GuildJoinReturnMessage>("guild:join _reply:member-already-exists", (message) => this.triggerOnJoinFailedEvents(message.Identifier, "member-already-exists"));
 	}
 
 	public joinGuild(identifier: string) {

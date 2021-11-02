@@ -61,6 +61,7 @@ namespace Api.Handlers.Main.Guild
 
 						if (guildMember.Count > 0)
 						{
+							Console.WriteLine("MEM_ALR_EXS");
 							connection.Send<GuildJoinStatusMessage>("guild:join _reply:member-already-exists", new GuildJoinStatusMessage
 							{
 								Identifier = message.Identifier
