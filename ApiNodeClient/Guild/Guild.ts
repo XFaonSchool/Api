@@ -13,9 +13,9 @@ export class Guild {
 	public constructor(api: ExolixApi) {
 		this.api = api;
 
-		api.onMessage<GuildJoinReturnMessage>("guild:join _reply:success", (message) => {
-
-		});
+		api.onMessage<GuildJoinReturnMessage>("guild:join _reply:success", (message) => this.triggerOnJoinSuccessEvents(message.Identifier));
+		api.onMessage<GuildJoinReturnMessage>("guild:join _reply:banned", (message) => this.triggerOnJoinFailedEvents(message.Identifier, "banned"));
+		api.onMessage<GuildJoinReturnMessage>("guild:join _reply:member-already-exist", (message) => this.triggerOnJoinFailedEvents(message.Identifier, "member-already-exists"));
 	}
 
 	public joinGuild(identifier: string) {
@@ -28,7 +28,15 @@ export class Guild {
 		this.onJoinSuccessEvents.push(action);
 	}
 
+	public triggerOnJoinSuccessEvents(identifier: string) {
+		this.onJoinSuccessEvents.forEach((event) => event(identifier));
+	}
+
 	public onJoinFailed(action: (identifier: string, reason: "member-already-exists" | "banned") => void) {
 		this.onJoinFailedEvents.push(action);
+	}
+
+	public triggerOnJoinFailedEvents(identifier: string, reason: "member-already-exists" | "banned") {
+		this.onJoinFailedEvents.forEach((event) => event(identifier, reason));
 	}
 }
