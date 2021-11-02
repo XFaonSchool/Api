@@ -1,5 +1,6 @@
 ﻿using Api.Handlers.Account;
 using Api.Handlers.Main;
+using Api.Handlers.Main.Login;
 using Exolix.ApiHost;
 using Exolix.DataBase;
 using Exolix.Json;
@@ -14,11 +15,11 @@ public class GlobalStorage
 
 	public static void CheckLoggedIn(ApiConnection connection, Action isLoggedIn)
 	{
-		List<AccountData> instances = DataBase?.FetchRecords<AccountData>(Name, "OnlineInstances", new string[,]
+		List<OnlineInstances> instances = DataBase?.FetchRecords<OnlineInstances>(Name, "OnlineInstances", new string[,]
 		{
 			{ "ConnectionIdentifier", connection.Identifier },
 			{ "Node", Api?.ListeningAddress! }
-		}) ?? new List<AccountData>();
+		}) ?? new List<OnlineInstances>();
 
 		if (instances.Count > 0)
 		{

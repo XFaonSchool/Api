@@ -25,6 +25,14 @@ namespace Api.Handlers.Main.Login
 
 	}
 
+	public class OnlineInstances
+	{
+		public ObjectId _id = new ObjectId();
+		public string UserIdentifier = "";
+		public string Node = "";
+		public string ConnectionIdentifier = "";
+	}
+
 	public class AccountLogin
 	{
 		private ApiConnection Connection;

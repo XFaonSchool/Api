@@ -38,9 +38,13 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Account\" />
+    <Folder Include="Guild\" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Account\Account.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="Guild\Guild.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
   </ItemGroup>

@@ -13,7 +13,10 @@ namespace Api.Handlers.Main.Guild
 		{
 			connection.OnMessage("guild:join", (raw) =>
 			{
-
+				GlobalStorage.CheckLoggedIn(connection, () =>
+				{
+					Console.WriteLine("Logged In");
+				});
 			});
 		}
 	}

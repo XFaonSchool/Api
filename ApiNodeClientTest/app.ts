@@ -7,6 +7,8 @@ axeri.onReady(() => {
 
 	axeri.account.onLoginTokenSuccess(() => {
 		console.log("Logged in!");
+
+		axeri.guild.joinGuild("g:1a");
 	});
 
 	axeri.account.onLoginTokenFailed(() => {

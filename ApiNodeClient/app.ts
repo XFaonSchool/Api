@@ -1,11 +1,13 @@
 import { ExolixApi } from "@axeridev/exolix-node";
 import { Account } from "./Account/Account";
+import { Guild } from "./Guild/Guild";
 
 export class AxeriApi {
 	private api: ExolixApi;
 	private onReadyEvents: (() => void)[] = [];
 
 	public account: Account;
+	public guild: Guild;
 
 	public constructor() {
 		this.api = new ExolixApi({
@@ -13,6 +15,7 @@ export class AxeriApi {
 		});
 
 		this.account = new Account(this.api);
+		this.guild = new Guild(this.api);
 
 		this.api.onOpen(() => {
 			this.triggerOnReadyEvents();
