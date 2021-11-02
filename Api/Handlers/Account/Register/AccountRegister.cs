@@ -34,37 +34,7 @@ namespace Api.Handlers.Account.Register
 				if (message.Email != null && message.UserName != null && message.DisplayName != null && message.Password != null)
 				{
 					string accountToken = new TimeOnly().ToString();
-					int uuidLength = 5;
-					char[] chars = "!@#435asd$%^&4as45_+45-=123442klmasdfgt548ufgdf45435asdnop423567890':;,./<def423g>?~`".ToCharArray();
-					string uuid = "";
 					Random random = new Random();
-
-					Action<bool> buildUuid = (bool append) =>
-					{
-						if (append)
-						{
-							uuid += '-';
-						}
-
-						for (int index = 0; index < uuidLength; index++)
-						{
-							uuid += chars[random.Next(0, uuidLength - 1)];
-						}
-					};
-
-					buildUuid(false);
-					buildUuid(true);
-					buildUuid(true);
-					buildUuid(true);
-					buildUuid(true);
-					buildUuid(true);
-					buildUuid(true);
-					buildUuid(true);
-					buildUuid(true);
-					buildUuid(true);
-					buildUuid(true);
-					buildUuid(true);
-					buildUuid(true);
 
 					GlobalStorage.DataBase?.InsertRecord(GlobalStorage.Name, "Accounts", new BsonDocument
 					{
@@ -74,7 +44,7 @@ namespace Api.Handlers.Account.Register
 						{ "DisplayName", message.DisplayName },
 						{ "Token", accountToken },
 						{ "EmailVerified", false },
-						{ "Identifier", "a:" + uuid }
+						{ "Identifier", "a:" + Guid.NewGuid().ToString() }
 					});
 
 					connection.Send<AccountRegisterSuccessMessage>("account:register _reply:success", new AccountRegisterSuccessMessage
