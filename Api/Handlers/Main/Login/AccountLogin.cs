@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Api.Handlers.Account;
 using Exolix.ApiHost;
 using Exolix.Json;
+using MongoDB.Bson;
 
 namespace Api.Handlers.Main.Login
 {
@@ -36,20 +37,22 @@ namespace Api.Handlers.Main.Login
 			{
 				LoginMessage message = JsonHandler.Parse<LoginMessage>(raw);
 				Instance accountInstance = new Instance(message.Token);
+				AccountData? accountData = accountInstance.Data;
 
-				if (accountInstance.Data != null)
+				if (accountData != null)
 				{
-					connection.Send<LoginSuccessMessage>("login _reply:success", new LoginSuccessMessage
+					GlobalStorage.DataBase?.InsertRecord(GlobalStorage.Name, "OnlineInstances", new BsonDocument
 					{
-
+						{ "UserIdentifier", accountData.Identifier },
+						{ "Node", GlobalStorage.Api?.ListeningAddress },
+						{ "ConnectionIdentifier", connection.Identifier }
 					});
+
+					connection.Send<LoginSuccessMessage>("login _reply:success", new LoginSuccessMessage { });
 					return;
 				}
 
-				connection.Send<LoginFailedMessage>("login _reply:failed", new LoginFailedMessage
-				{
-
-				});
+				connection.Send<LoginFailedMessage>("login _reply:failed", new LoginFailedMessage { });
 			});
 		}
 	}
