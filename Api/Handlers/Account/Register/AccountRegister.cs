@@ -15,6 +15,12 @@ namespace Api.Handlers.Account.Register
 		public string? UserName = null;
 		public string? Password = null;
 		public string? DisplayName = null;
+		public string? Email = null;
+	}
+
+	public class AccountRegisterSuccessMessage
+	{
+		public string Token = "";
 	}
 
     public class AccountRegister
@@ -25,9 +31,24 @@ namespace Api.Handlers.Account.Register
 			{
 				RegisterNewMessage message = JsonHandler.Parse<RegisterNewMessage>(raw);
 				
-				if (message.UserName != null && message.DisplayName != null && message.Password != null)
+				if (message.Email != null && message.UserName != null && message.DisplayName != null && message.Password != null)
 				{
-					Logger.Info("Usrn: " + message.UserName + " DsplNme: " + message.DisplayName);
+					string accountToken = new TimeOnly().ToString();
+
+					GlobalStorage.DataBase?.InsertRecord(GlobalStorage.Name, "Accounts", new BsonDocument
+					{
+						{ "Email", message.Email },
+						{ "Password", message.Password },
+						{ "UserName", message.UserName },
+						{ "DisplayName", message.DisplayName },
+						{ "Token", accountToken },
+						{ "EmailVerified", false }
+					});
+
+					connection.Send<AccountRegisterSuccessMessage>("account:register _reply:success", new AccountRegisterSuccessMessage
+					{
+						Token = accountToken
+					});
 					return;
 				}
 			});

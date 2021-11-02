@@ -6,14 +6,19 @@ using System.Threading.Tasks;
 
 namespace Api.Handlers.Account
 {
+	public class OtherEmail
+	{
+		public string Email = "";
+		public bool Verified = false;
+	}
+
 	public class AccountData
 	{
 		public string UserName = "";
-		public string PasswordToken = "";
+		public string Password = "";
 		public string DisplayName = "";
-		public int TagNumber = 0001;
 		public string Email = "";
-		public string[] OtherEmail = new string[0];
+		public List<OtherEmail> OtherEmails = new List<OtherEmail>();
 	}
 
 	public class Instance
