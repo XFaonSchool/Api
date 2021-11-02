@@ -33,7 +33,7 @@ namespace Api.Handlers.Account.Register
 				
 				if (message.Email != null && message.UserName != null && message.DisplayName != null && message.Password != null)
 				{
-					string accountToken = new TimeOnly().ToString();
+					string accountToken = "tkn:" + Guid.NewGuid().ToString() + "-" + Guid.NewGuid().ToString();
 					Random random = new Random();
 
 					GlobalStorage.DataBase?.InsertRecord(GlobalStorage.Name, "Accounts", new BsonDocument
