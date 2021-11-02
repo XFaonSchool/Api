@@ -15,6 +15,7 @@ export class Account {
 	private api: ExolixApi;
 	private onRegisterSuccessEvents: ((token: string) => void)[] = [];
 	private onLoginTokenSuccessEvents: (() => void)[] = [];
+	private onLoginTokenFailedEvents: (() => void)[] = [];
 
 	public isLoggedIn = false;
 
@@ -26,6 +27,7 @@ export class Account {
 		});
 
 		this.api.onMessage("login _reply:success", () => this.triggerOnLoginTokenSuccess());
+		this.api.onMessage("login _reply:failed", () => this.triggerOnLoginTokenFailed());
 	}
 
 	public registerNew(details: AccountRegisterDetails) {
@@ -47,11 +49,20 @@ export class Account {
 	}
 
 	public onLoginTokenSuccess(action: () => void) {
-		this.onRegisterSuccessEvents.push(action);
+		this.onLoginTokenSuccessEvents.push(action);
 	}
 
 	public triggerOnLoginTokenSuccess() {
 		this.isLoggedIn = true;
 		this.onLoginTokenSuccessEvents.forEach((event) => event());
+	}
+
+	public onLoginTokenFailed(action: () => void) {
+		this.onLoginTokenFailedEvents.push(action);
+	}
+
+	public triggerOnLoginTokenFailed() {
+		this.isLoggedIn = false;
+		this.onLoginTokenFailedEvents.forEach((event) => event());
 	}
 }

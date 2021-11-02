@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Api.Handlers.Main.Login;
 
 namespace Api.Handlers.Main
 {
@@ -12,7 +13,7 @@ namespace Api.Handlers.Main
 		{
 			GlobalStorage.Api?.OnOpen((connection) =>
 			{
-				
+				new AccountLogin(connection);
 			});
 		}
 	}

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Exolix.DataBase;
 using MongoDB.Bson;
 
 namespace Api.Handlers.Account
@@ -28,5 +29,24 @@ namespace Api.Handlers.Account
 
 	public class Instance
 	{
+		public AccountData? Data = null;
+
+		public Instance(string token)
+		{
+			List<AccountData> data = GlobalStorage.DataBase?.FetchRecords<AccountData>(GlobalStorage.Name, "Accounts", new string[,]
+			{
+				{ "Token", token }
+			}, new QueryFetchOptions { 
+				Limit = 1
+			}) ?? new List<AccountData>();
+
+			if (data.Count == 1)
+			{
+				Data = data[0];
+				return;
+			}
+
+			throw new Exception("The account does not exist");
+		}
 	}
 }
