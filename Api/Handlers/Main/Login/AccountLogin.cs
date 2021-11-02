@@ -36,23 +36,26 @@ namespace Api.Handlers.Main.Login
 			connection.OnMessage("login", (raw) =>
 			{
 				LoginMessage message = JsonHandler.Parse<LoginMessage>(raw);
-				Instance accountInstance = new Instance(message.Token);
-				AccountData? accountData = accountInstance.Data;
-
-				if (accountData != null)
+				try
 				{
-					GlobalStorage.DataBase?.InsertRecord(GlobalStorage.Name, "OnlineInstances", new BsonDocument
+					Instance accountInstance = new Instance(message.Token);
+					AccountData? accountData = accountInstance.Data;
+
+					if (accountData != null)
+					{
+						GlobalStorage.DataBase?.InsertRecord(GlobalStorage.Name, "OnlineInstances", new BsonDocument
 					{
 						{ "UserIdentifier", accountData.Identifier },
 						{ "Node", GlobalStorage.Api?.ListeningAddress },
 						{ "ConnectionIdentifier", connection.Identifier }
 					});
 
-					connection.Send<LoginSuccessMessage>("login _reply:success", new LoginSuccessMessage { });
-					return;
+						connection.Send<LoginSuccessMessage>("login _reply:success", new LoginSuccessMessage { });
+					}
+				} catch (Exception)
+				{
+					connection.Send<LoginFailedMessage>("login _reply:failed", new LoginFailedMessage { });
 				}
-
-				connection.Send<LoginFailedMessage>("login _reply:failed", new LoginFailedMessage { });
 			});
 		}
 	}
