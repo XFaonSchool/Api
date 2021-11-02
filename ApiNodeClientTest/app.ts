@@ -8,15 +8,15 @@ axeri.onReady(() => {
 	axeri.account.onLoginTokenSuccess(() => {
 		console.log("Logged in!");
 
-		axeri.guild.onJoinSuccess((id) => {
-			console.log("Guild: Joined '" + id + "'");
-		});
+		//axeri.guild.onJoinSuccess((id) => {
+		//	console.log("Guild: Joined '" + id + "'");
+		//});
 
-		axeri.guild.onJoinFailed((id, reason) => {
-			console.log("Guild Error: Failed to join '" + id + "' for reason '" + reason + "'");
-		});
+		//axeri.guild.onJoinFailed((id, reason) => {
+		//	console.log("Guild Error: Failed to join '" + id + "' for reason '" + reason + "'");
+		//});
 
-		axeri.guild.joinGuild("g:1a");
+		//axeri.guild.joinGuild("g:1a");
 	});
 
 	axeri.account.onLoginTokenFailed(() => {
@@ -24,7 +24,18 @@ axeri.onReady(() => {
 		process.exit(0);
 	});
 
-	axeri.account.loginToken("tok.en");
+	axeri.account.onRegisterSuccess((token) => {
+		console.log("Account created");
+	});
+
+	axeri.account.registerNew({
+		UserName: "Test1",
+		Email: "test@example.com",
+		DisplayName: "Test1",
+		Password: "passwrdd-1"
+	});
+
+	/*axeri.account.loginToken("tok.en");*/
 });
 
 axeri.run();

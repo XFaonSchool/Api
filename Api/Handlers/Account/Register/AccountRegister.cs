@@ -34,6 +34,15 @@ namespace Api.Handlers.Account.Register
 				if (message.Email != null && message.UserName != null && message.DisplayName != null && message.Password != null)
 				{
 					string accountToken = new TimeOnly().ToString();
+					int uuidLength = 64;
+					char[] chars = "abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+-=1234567890':;,./<>?~`ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
+					string uuid = "";
+					Random random = new Random();
+
+					for (int index = 0; index < uuidLength; index++)
+					{
+						uuid += chars[random.Next(0, uuidLength - 1)];
+					}
 
 					GlobalStorage.DataBase?.InsertRecord(GlobalStorage.Name, "Accounts", new BsonDocument
 					{
@@ -43,7 +52,7 @@ namespace Api.Handlers.Account.Register
 						{ "DisplayName", message.DisplayName },
 						{ "Token", accountToken },
 						{ "EmailVerified", false },
-						{ "Identifier", "a:1a" }
+						{ "Identifier", "a:" + uuid }
 					});
 
 					connection.Send<AccountRegisterSuccessMessage>("account:register _reply:success", new AccountRegisterSuccessMessage
