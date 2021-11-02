@@ -13,7 +13,7 @@ public class GlobalStorage
 	public static ServerConfig? Config;
 	public static string Name = "Axeri";
 
-	public static void CheckLoggedIn(ApiConnection connection, Action isLoggedIn)
+	public static void CheckLoggedIn(ApiConnection connection, Action<string> isLoggedIn)
 	{
 		List<OnlineInstances> instances = DataBase?.FetchRecords<OnlineInstances>(Name, "OnlineInstances", new string[,]
 		{
@@ -23,7 +23,7 @@ public class GlobalStorage
 
 		if (instances.Count > 0)
 		{
-			isLoggedIn();
+			isLoggedIn(instances[0].UserIdentifier);
 			return;
 		}
 
