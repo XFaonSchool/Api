@@ -14,6 +14,9 @@ export interface AccountRegisterSuccessMessage {
 export class Account {
 	private api: ExolixApi;
 	private onRegisterSuccessEvents: ((token: string) => void)[] = [];
+	private onLoginTokenSuccessEvents: (() => void)[] = [];
+
+	public isLoggedIn = false;
 
 	public constructor(api: ExolixApi) {
 		this.api = api;
@@ -21,10 +24,18 @@ export class Account {
 		this.api.onMessage<AccountRegisterSuccessMessage>("account:register _reply:success", (message) => {
 			this.triggerOnRegisterSuccess(message.Token);
 		});
+
+		this.api.onMessage("login _reply:success", () => this.triggerOnLoginTokenSuccess());
 	}
 
 	public registerNew(details: AccountRegisterDetails) {
 		this.api.send("account:register", details);
+	}
+
+	public loginToken(token: string) {
+		this.api.send("login", {
+			Token: token
+		});
 	}
 
 	public onRegisterSuccess(action: (token: string) => void) {
@@ -33,5 +44,14 @@ export class Account {
 
 	public triggerOnRegisterSuccess(token: string) {
 		this.onRegisterSuccessEvents.forEach((event) => event(token));
+	}
+
+	public onLoginTokenSuccess(action: () => void) {
+		this.onRegisterSuccessEvents.push(action);
+	}
+
+	public triggerOnLoginTokenSuccess() {
+		this.isLoggedIn = true;
+		this.onLoginTokenSuccessEvents.forEach((event) => event());
 	}
 }

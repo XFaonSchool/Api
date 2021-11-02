@@ -53,16 +53,5 @@ namespace Api.Handlers.Account.Register
 				}
 			});
 		}
-
-		private Instance CreateAccount(RegisterNewMessage message)
-		{
-			GlobalStorage.DataBase?.InsertRecord(GlobalStorage.Name, "Accounts", new BsonDocument
-			{
-				{ "UserName", message.UserName },
-				{ "", "" }
-			});
-
-			return new Instance();
-		}
     }
 }

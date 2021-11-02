@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MongoDB.Bson;
 
 namespace Api.Handlers.Account
 {
@@ -14,11 +15,15 @@ namespace Api.Handlers.Account
 
 	public class AccountData
 	{
+		public ObjectId _id = new ObjectId();
 		public string UserName = "";
 		public string Password = "";
 		public string DisplayName = "";
 		public string Email = "";
-		public List<OtherEmail> OtherEmails = new List<OtherEmail>();
+		public OtherEmail[]? OtherEmails = null;
+		public string Token = "";
+		public string Identifier = "";
+		public Boolean EmailVerified = false;
 	}
 
 	public class Instance

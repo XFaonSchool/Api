@@ -1,4 +1,5 @@
 ﻿using Api.Handlers.Account;
+using Api.Handlers.Main;
 using Exolix.ApiHost;
 using Exolix.DataBase;
 using Exolix.Json;
@@ -58,17 +59,6 @@ class Server
 
         db.OnReady(() =>
         {
-			db.FetchRecords<UwuGamer>("Axeri", "Accounts", new string[,]
-			{
-				{
-					"displayName",
-					"XFaon"
-				}
-			})?.ForEach((rec) =>
-			{
-				Logger.Info(rec.email);
-			});
-
             Logger.Info("Starting API gateway server");
 
             ApiHost api = GlobalStorage.Api = new ApiHost(new ApiHostSettings
@@ -81,6 +71,7 @@ class Server
                 Logger.Success("Server is ready");
 
 				new Account();
+				new Main();
 
                 api.OnOpen((connection) =>
                 {
