@@ -42,7 +42,8 @@ namespace Api.Handlers.Account.Register
 						{ "UserName", message.UserName },
 						{ "DisplayName", message.DisplayName },
 						{ "Token", accountToken },
-						{ "EmailVerified", false }
+						{ "EmailVerified", false },
+						{ "Identifier", "1a" }
 					});
 
 					connection.Send<AccountRegisterSuccessMessage>("account:register _reply:success", new AccountRegisterSuccessMessage

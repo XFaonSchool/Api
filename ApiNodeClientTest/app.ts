@@ -13,7 +13,7 @@ axeri.onReady(() => {
 		console.log("Failed to login");
 	});
 
-	axeri.account.loginToken("toke.n");
+	axeri.account.loginToken("tok.en");
 });
 
 axeri.run();

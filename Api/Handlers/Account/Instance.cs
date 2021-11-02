@@ -31,11 +31,11 @@ namespace Api.Handlers.Account
 	{
 		public AccountData? Data = null;
 
-		public Instance(string token)
+		public Instance(string? token = null, string? identifier = null)
 		{
 			List<AccountData> data = GlobalStorage.DataBase?.FetchRecords<AccountData>(GlobalStorage.Name, "Accounts", new string[,]
 			{
-				{ "Token", token }
+				{ (token != null ? "Token" : "Identifier"), (token != null ? token : identifier ?? "1a") }
 			}, new QueryFetchOptions { 
 				Limit = 1
 			}) ?? new List<AccountData>();
