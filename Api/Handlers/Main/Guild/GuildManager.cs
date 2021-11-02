@@ -18,7 +18,7 @@ namespace Api.Handlers.Main.Guild
 		public string Identifier = "";
 	}
 
-	public class GuildBannedMembers
+	public class GuildMember
 	{
 		public string GuildReference = "";
 		public string UserIdentifier = "";
@@ -36,11 +36,11 @@ namespace Api.Handlers.Main.Guild
 
 					if (message.Identifier != null)
 					{
-						List<GuildBannedMembers> bannedMember = GlobalStorage.DataBase?.FetchRecords<GuildBannedMembers>(GlobalStorage.Name, "GuildBannedMembers", new string[,]
+						List<GuildMember> bannedMember = GlobalStorage.DataBase?.FetchRecords<GuildMember>(GlobalStorage.Name, "GuildBannedMembers", new string[,]
 						{
 							{ "GuildReference", message.Identifier },
 							{ "UserIdentifier", userIdentifier }
-						}) ?? new List<GuildBannedMembers>();
+						}) ?? new List<GuildMember>();
 
 						if (bannedMember.Count > 0)
 						{
@@ -52,6 +52,20 @@ namespace Api.Handlers.Main.Guild
 						}
 
 						// TODO: Check if the user is already in
+						List<GuildMember> guildMember = GlobalStorage.DataBase?.FetchRecords<GuildMember>(GlobalStorage.Name, "GuildMembers", new string[,]
+						{
+							{ "UserIdentifier", userIdentifier },
+							{ "GuildReference", message.Identifier }
+						}) ?? new List<GuildMember>();
+
+						if (guildMember.Count > 0)
+						{
+							connection.Send<GuildJoinStatusMessage>("guild:join _reply:member-already-exists", new GuildJoinStatusMessage
+							{
+								Identifier = message.Identifier
+							});
+							return;
+						}
 
 						GlobalStorage.DataBase?.InsertRecord(GlobalStorage.Name, "GuildMembers", new BsonDocument
 						{
@@ -64,11 +78,6 @@ namespace Api.Handlers.Main.Guild
 						});
 						return;
 					}
-
-					connection.Send<GuildJoinStatusMessage>("guild:join _reply:failed", new GuildJoinStatusMessage
-					{
-						Identifier = message.Identifier
-					});
 				});
 			});
 		}
