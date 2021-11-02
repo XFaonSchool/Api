@@ -11,6 +11,23 @@ public class GlobalStorage
 	public static DataBaseApi? DataBase;
 	public static ServerConfig? Config;
 	public static string Name = "Axeri";
+
+	public static void CheckLoggedIn(ApiConnection connection, Action isLoggedIn)
+	{
+		List<AccountData> instances = DataBase?.FetchRecords<AccountData>(Name, "OnlineInstances", new string[,]
+		{
+			{ "ConnectionIdentifier", connection.Identifier },
+			{ "Node", Api?.ListeningAddress! }
+		}) ?? new List<AccountData>();
+
+		if (instances.Count > 0)
+		{
+			isLoggedIn();
+			return;
+		}
+
+		connection.Close();
+	}
 }
 
 public class ConfigDataBaseSettings

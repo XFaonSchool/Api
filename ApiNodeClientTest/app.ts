@@ -11,6 +11,7 @@ axeri.onReady(() => {
 
 	axeri.account.onLoginTokenFailed(() => {
 		console.log("Failed to login");
+		process.exit(0);
 	});
 
 	axeri.account.loginToken("tok.en");
