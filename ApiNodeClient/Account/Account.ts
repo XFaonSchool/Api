@@ -11,9 +11,19 @@ export interface AccountRegisterSuccessMessage {
 	Token: string;
 }
 
+export interface LoginGetTokenMessage {
+	Token: string;
+}
+
+export interface LoginDetails {
+	EmailUserName: string;
+	Password: string;
+}
+
 export class Account {
 	private api: ExolixApi;
 	private onRegisterSuccessEvents: ((token: string) => void)[] = [];
+	private onLoginGetTokenSuccessEvents: ((token: string) => void)[] = [];
 	private onLoginTokenSuccessEvents: (() => void)[] = [];
 	private onLoginTokenFailedEvents: (() => void)[] = [];
 
@@ -28,6 +38,8 @@ export class Account {
 
 		this.api.onMessage("login _reply:success", () => this.triggerOnLoginTokenSuccess());
 		this.api.onMessage("login _reply:failed", () => this.triggerOnLoginTokenFailed());
+
+		this.api.onMessage<LoginGetTokenMessage>("account:login-get-token _reply:success", (message) => this.triggerOnLoginGetTokenSuccess(message.Token));
 	}
 
 	public registerNew(details: AccountRegisterDetails) {
@@ -40,6 +52,10 @@ export class Account {
 		});
 	}
 
+	public loginGetToken(details: LoginDetails) {
+		this.api.send<LoginDetails>("account:login-get-token", details);
+	}
+
 	public onRegisterSuccess(action: (token: string) => void) {
 		this.onRegisterSuccessEvents.push(action);
 	}
@@ -50,6 +66,14 @@ export class Account {
 
 	public onLoginTokenSuccess(action: () => void) {
 		this.onLoginTokenSuccessEvents.push(action);
+	}
+
+	public onLoginGetTokenSuccess(action: (token: string) => void) {
+		this.onLoginGetTokenSuccessEvents.push(action);
+	}
+
+	public triggerOnLoginGetTokenSuccess(token: string) {
+		this.onLoginGetTokenSuccessEvents.forEach((event) => event(token));
 	}
 
 	public triggerOnLoginTokenSuccess() {

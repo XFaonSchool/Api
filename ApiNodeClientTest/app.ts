@@ -21,21 +21,17 @@ axeri.onReady(() => {
 
 	axeri.account.onLoginTokenFailed(() => {
 		console.log("Failed to login");
-		process.exit(0);
 	});
 
-	axeri.account.onRegisterSuccess((token) => {
-		console.log("Account created");
+	axeri.account.onLoginGetTokenSuccess((token) => {
+		console.log(token);
+		axeri.account.loginToken(token);
 	});
 
-	axeri.account.registerNew({
-		UserName: "Test1",
-		Email: "test@example.com",
-		DisplayName: "Test1",
-		Password: "passwrdd-1"
+	axeri.account.loginGetToken({
+		EmailUserName: "XFaon",
+		Password: "pass-word"
 	});
-
-	/*axeri.account.loginToken("tok.en");*/
 });
 
 axeri.run();
