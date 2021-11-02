@@ -9,7 +9,7 @@ export class Guild {
 
 	public joinGuild(identifier: string) {
 		this.api.send("guild:join", {
-			
+			Identifier: identifier
 		});
 	}
 }
