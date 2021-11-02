@@ -34,15 +34,37 @@ namespace Api.Handlers.Account.Register
 				if (message.Email != null && message.UserName != null && message.DisplayName != null && message.Password != null)
 				{
 					string accountToken = new TimeOnly().ToString();
-					int uuidLength = 64;
-					char[] chars = "abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+-=1234567890':;,./<>?~`ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
+					int uuidLength = 5;
+					char[] chars = "!@#435asd$%^&4as45_+45-=123442klmasdfgt548ufgdf45435asdnop423567890':;,./<def423g>?~`".ToCharArray();
 					string uuid = "";
 					Random random = new Random();
 
-					for (int index = 0; index < uuidLength; index++)
+					Action<bool> buildUuid = (bool append) =>
 					{
-						uuid += chars[random.Next(0, uuidLength - 1)];
-					}
+						if (append)
+						{
+							uuid += '-';
+						}
+
+						for (int index = 0; index < uuidLength; index++)
+						{
+							uuid += chars[random.Next(0, uuidLength - 1)];
+						}
+					};
+
+					buildUuid(false);
+					buildUuid(true);
+					buildUuid(true);
+					buildUuid(true);
+					buildUuid(true);
+					buildUuid(true);
+					buildUuid(true);
+					buildUuid(true);
+					buildUuid(true);
+					buildUuid(true);
+					buildUuid(true);
+					buildUuid(true);
+					buildUuid(true);
 
 					GlobalStorage.DataBase?.InsertRecord(GlobalStorage.Name, "Accounts", new BsonDocument
 					{
