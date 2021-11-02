@@ -20,6 +20,7 @@ namespace Api.Handlers.Main.Guild
 
 	public class GuildMember
 	{
+		public ObjectId _id = new ObjectId();
 		public string GuildReference = "";
 		public string UserIdentifier = "";
 	}

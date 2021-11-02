@@ -8,6 +8,14 @@ axeri.onReady(() => {
 	axeri.account.onLoginTokenSuccess(() => {
 		console.log("Logged in!");
 
+		axeri.guild.onJoinSuccess((id) => {
+			console.log("Guild: Joined '" + id + "'");
+		});
+
+		axeri.guild.onJoinFailed((id, reason) => {
+			console.log("Guild Error: Failed to join '" + id + "' for reason '" + reason + "'");
+		});
+
 		axeri.guild.joinGuild("g:1a");
 	});
 
