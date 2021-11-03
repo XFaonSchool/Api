@@ -27,7 +27,7 @@ namespace Api.Handlers.Account
 		public string Identifier = "";
 		public Boolean EmailVerified = false;
 	}
-
+	 
 	public class Instance
 	{
 		public AccountData? Data = null;
