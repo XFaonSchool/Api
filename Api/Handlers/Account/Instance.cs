@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Exolix.DataBase;
 using MongoDB.Bson;
+using MongoDB.Driver;
 
 namespace Api.Handlers.Account
 {
@@ -33,16 +34,9 @@ namespace Api.Handlers.Account
 
 		public Instance(string? token = null, string? identifier = null)
 		{
-			GlobalStorage.DataBase
+			var data = GlobalStorage.DataBaseConnection?.GetDatabase(GlobalStorage.Name).GetCollection<AccountData>("OnlineInstances").Find(Builders<AccountData>.Filter.Where((x) => true)).Limit(1).ToList();
 
-			List<AccountData> data = GlobalStorage.DataBase?.FetchRecords<AccountData>(GlobalStorage.Name, "Accounts", new string[,]
-			{
-				{ (token != null ? "Token" : "Identifier"), (token != null ? token : identifier ?? "1a") }
-			}, new QueryFetchOptions { 
-				Limit = 1
-			}) ?? new List<AccountData>();
-
-			if (data.Count == 1)
+			if (data?.Count == 1)
 			{
 				Data = data[0];
 				return;

@@ -10,13 +10,14 @@ using MongoDB.Driver;
 public class GlobalStorage
 {
     public static ApiHost? Api;
-	public static MongoClient? DataBase;
+	public static MongoClient? DataBaseConnection;
 	public static ServerConfig? Config;
+	public static IMongoDatabase? DataBase;
 	public static string Name = "Axeri";
 
 	public static void CheckLoggedIn(ApiConnection connection, Action<string> isLoggedIn)
 	{
-		var instances = DataBase?.GetDatabase(Name).GetCollection<OnlineInstances>("Accounts").Find(Builders<OnlineInstances>.Filter.Where((x) => x.ConnectionIdentifier == connection.Identifier && x.Node == Api!.ListeningAddress)).ToList();
+		var instances = DataBaseConnection?.GetDatabase(Name).GetCollection<OnlineInstances>("Accounts").Find(Builders<OnlineInstances>.Filter.Where((x) => x.ConnectionIdentifier == connection.Identifier && x.Node == Api!.ListeningAddress)).ToList();
 
 		if (instances?.Count > 0)
 		{
@@ -67,7 +68,8 @@ class Server
 		GlobalStorage.Name = config.DataBaseName;
         Logger.Info("Connecting to API database");
 
-		GlobalStorage.DataBase = new MongoClient(config.DataBase.ConnectAddress);
+		GlobalStorage.DataBaseConnection = new MongoClient(config.DataBase.ConnectAddress);
+		GlobalStorage.DataBase = GlobalStorage.DataBaseConnection.GetDatabase(GlobalStorage.Name);
 
         Logger.Info("Starting API gateway server");
 
