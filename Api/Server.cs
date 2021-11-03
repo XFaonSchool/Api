@@ -27,7 +27,7 @@ public class GlobalStorage
 		connection.Close();
 	}
 }
-
+ 
 public class ConfigDataBaseSettings
 {
 	public string ConnectAddress = "mongodb://localhost:27017";
