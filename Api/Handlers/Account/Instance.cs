@@ -33,6 +33,8 @@ namespace Api.Handlers.Account
 
 		public Instance(string? token = null, string? identifier = null)
 		{
+			GlobalStorage.DataBase
+
 			List<AccountData> data = GlobalStorage.DataBase?.FetchRecords<AccountData>(GlobalStorage.Name, "Accounts", new string[,]
 			{
 				{ (token != null ? "Token" : "Identifier"), (token != null ? token : identifier ?? "1a") }
