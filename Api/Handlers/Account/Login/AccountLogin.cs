@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Exolix.ApiHost;
-using Exolix.DataBase;
 using Exolix.Json;
+using MongoDB.Driver;
 
 namespace Api.Handlers.Account.Login
 {
@@ -39,15 +39,9 @@ namespace Api.Handlers.Account.Login
 						return;
 					}
 
-					List<AccountData> userAccount = GlobalStorage.DataBase?.FetchRecords<AccountData>(GlobalStorage.Name, "Accounts", new string[,]
-					{
-						{ "UserName", message.EmailUserName }
-					}, new QueryFetchOptions
-					{
-						Limit = 1
-					}) ?? new List<AccountData>();
+					var userAccount = GlobalStorage.DataBaseConnection?.GetDatabase(GlobalStorage.Name).GetCollection<AccountData>("Accounts").Find(Builders<AccountData>.Filter.Where((x) => x.UserName == message.EmailUserName)).ToList();
 
-					if (userAccount.Count == 1)
+					if (userAccount?.Count == 1)
 					{
 						// TODO: Handle encryption
 						if (userAccount[0].Password == message.Password)
