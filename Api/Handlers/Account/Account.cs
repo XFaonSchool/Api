@@ -14,8 +14,8 @@ namespace Api.Handlers.Account
 		{
 			GlobalStorage.Api?.OnOpen((connection) =>
 			{
-				new AccountLogin(connection);
-				new AccountRegister(connection);
+				_ = new AccountLogin(connection);
+				_ = new AccountRegister(connection);
 			});
 		}
     }
