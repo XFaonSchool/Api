@@ -17,7 +17,7 @@ public class GlobalStorage
 
 	public static void CheckLoggedIn(ApiConnection connection, Action<string> isLoggedIn)
 	{
-		var instances = DataBaseConnection?.GetDatabase(Name).GetCollection<OnlineInstances>("Accounts").Find(Builders<OnlineInstances>.Filter.Where((x) => x.ConnectionIdentifier == connection.Identifier && x.Node == Api!.ListeningAddress)).ToList();
+		var instances = DataBaseConnection?.GetDatabase(Name).GetCollection<OnlineInstance>("Accounts").Find(Builders<OnlineInstance>.Filter.Where((x) => x.ConnectionIdentifier == connection.Identifier && x.Node == Api!.ListeningAddress)).ToList();
 
 		if (instances?.Count > 0)
 		{

@@ -25,7 +25,7 @@ namespace Api.Handlers.Main.Login
 
 	}
 
-	public class OnlineInstances
+	public class OnlineInstance
 	{
 		public ObjectId _id = new ObjectId();
 		public string UserIdentifier = "";
@@ -52,12 +52,12 @@ namespace Api.Handlers.Main.Login
 
 					if (accountData != null)
 					{
-						GlobalStorage.DataBase?.InsertRecord(GlobalStorage.Name, "OnlineInstances", new BsonDocument
-					{
-						{ "UserIdentifier", accountData.Identifier },
-						{ "Node", GlobalStorage.Api?.ListeningAddress },
-						{ "ConnectionIdentifier", connection.Identifier }
-					});
+						GlobalStorage.DataBaseConnection?.GetDatabase(GlobalStorage.Name).GetCollection<OnlineInstance>("OnlineInstances").InsertOne(new OnlineInstance
+						{
+							UserIdentifier = accountData.Identifier,
+							Node = GlobalStorage.Api!.ListeningAddress,
+							ConnectionIdentifier = connection.Identifier
+						});
 
 						connection.Send("login _reply:success", new LoginSuccessMessage { });
 					}

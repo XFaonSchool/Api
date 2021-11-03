@@ -36,18 +36,18 @@ namespace Api.Handlers.Account.Register
 					string accountToken = "tkn:" + Guid.NewGuid().ToString() + "-" + Guid.NewGuid().ToString();
 					Random random = new Random();
 
-					GlobalStorage.DataBase?.InsertRecord(GlobalStorage.Name, "Accounts", new BsonDocument
+					GlobalStorage.DataBaseConnection?.GetDatabase(GlobalStorage.Name).GetCollection<AccountData>("Accounts").InsertOne(new AccountData
 					{
-						{ "Email", message.Email.ToLower() },
-						{ "Password", message.Password },
-						{ "UserName", message.UserName.ToLower() },
-						{ "DisplayName", message.DisplayName },
-						{ "Token", accountToken },
-						{ "EmailVerified", false },
-						{ "Identifier", "a:" + Guid.NewGuid().ToString() }
+						Email = message.Email.ToLower(),
+						Password = message.Password,
+						UserName = message.UserName.ToLower(),
+						DisplayName = message.DisplayName,
+						Token = accountToken,
+						EmailVerified = false,
+						Identifier = "a:" + Guid.NewGuid().ToString()
 					});
 
-					connection.Send<AccountRegisterSuccessMessage>("account:register _reply:success", new AccountRegisterSuccessMessage
+					connection.Send("account:register _reply:success", new AccountRegisterSuccessMessage
 					{
 						Token = accountToken
 					});
