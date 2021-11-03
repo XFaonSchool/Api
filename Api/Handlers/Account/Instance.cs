@@ -33,7 +33,12 @@ namespace Api.Handlers.Account
 
 		public Instance(string? token = null, string? identifier = null)
 		{
-			var data = GlobalStorage.DataBaseConnection?.GetDatabase(GlobalStorage.Name).GetCollection<AccountData>("OnlineInstances").Find(Builders<AccountData>.Filter.Where((x) => true)).Limit(1).ToList();
+			var data = GlobalStorage.DataBaseConnection?
+				.GetDatabase(GlobalStorage.Name)
+				.GetCollection<AccountData>("Accounts")
+				.Find(Builders<AccountData>.Filter.Where((x) => true))
+				.Limit(1)
+				.ToList();
 
 			if (data?.Count == 1)
 			{
