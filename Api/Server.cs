@@ -71,6 +71,11 @@ class Server
 		GlobalStorage.DataBaseConnection = new MongoClient(config.DataBase.ConnectAddress);
 		GlobalStorage.DataBase = GlobalStorage.DataBaseConnection.GetDatabase(GlobalStorage.Name);
 
+		GlobalStorage.DataBaseConnection?
+			.GetDatabase(GlobalStorage.Name)
+			.GetCollection<OnlineInstance>("OnlineInstances")
+			.DeleteMany(Builders<OnlineInstance>.Filter.Where((x) => true));
+
         Logger.Info("Starting API gateway server");
 
         ApiHost api = GlobalStorage.Api = new ApiHost(new ApiHostSettings

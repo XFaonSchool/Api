@@ -45,6 +45,7 @@ axeri.onReady(() => {
 
 		rl.question("Password: ", (ans) => {
 			password = ans;
+			rl.close();
 
 			axeri.account.loginGetToken({
 				EmailUserName: username,

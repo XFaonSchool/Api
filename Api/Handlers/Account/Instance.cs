@@ -31,14 +31,28 @@ namespace Api.Handlers.Account
 	{
 		public AccountData? Data = null;
 
-		public Instance(string? token = null, string? identifier = null)
+		public Instance(string auth, bool useIdentifier = false)
 		{
-			var data = GlobalStorage.DataBaseConnection?
-				.GetDatabase(GlobalStorage.Name)
-				.GetCollection<AccountData>("Accounts")
-				.Find(Builders<AccountData>.Filter.Where((x) => (token != null ? x.Token == token : x.Identifier == identifier)))
-				.Limit(1)
-				.ToList();
+			List<AccountData>? data;
+
+			if (useIdentifier)
+			{
+				data = GlobalStorage.DataBaseConnection?
+					.GetDatabase(GlobalStorage.Name)
+					.GetCollection<AccountData>("Accounts")
+					.Find(Builders<AccountData>.Filter.Where((x) => x.Token == auth))
+					.Limit(1)
+					.ToList();
+			}
+			else
+			{
+				data = GlobalStorage.DataBaseConnection?
+					.GetDatabase(GlobalStorage.Name)
+					.GetCollection<AccountData>("Accounts")
+					.Find(Builders<AccountData>.Filter.Where((x) => x.Token == auth))
+					.Limit(1)
+					.ToList();
+			}
 
 			if (data?.Count == 1)
 			{
