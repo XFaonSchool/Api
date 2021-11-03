@@ -65,7 +65,7 @@ namespace Api.Handlers.Account.Login
 						EmailUsername = message.EmailUserName
 					});
 				}
-			});
+			}); 
 		}
 	}
 }
