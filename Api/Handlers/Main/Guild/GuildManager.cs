@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Exolix.ApiHost;
 using Exolix.Json;
 using MongoDB.Bson;
+using MongoDB.Driver;
 
 namespace Api.Handlers.Main.Guild
 {
@@ -14,7 +15,8 @@ namespace Api.Handlers.Main.Guild
 		public string? Identifier = null;
 	}
 
-	public class GuildJoinStatusMessage {
+	public class GuildJoinStatusMessage
+	{
 		public string Identifier = "";
 	}
 
@@ -37,13 +39,13 @@ namespace Api.Handlers.Main.Guild
 
 					if (message.Identifier != null)
 					{
-						List<GuildMember> bannedMember = GlobalStorage.DataBase?.FetchRecords<GuildMember>(GlobalStorage.Name, "GuildBannedMembers", new string[,]
-						{
-							{ "GuildReference", message.Identifier },
-							{ "UserIdentifier", userIdentifier }
-						}) ?? new List<GuildMember>();
+						List<GuildMember>? bannedMember = GlobalStorage.DataBaseConnection?
+							.GetDatabase(GlobalStorage.Name)
+							.GetCollection<GuildMember>("GuildBannedMembers")
+							.Find(Builders<GuildMember>.Filter.Where((x) => x.GuildReference == message.Identifier && x.UserIdentifier == userIdentifier))
+							.ToList();
 
-						if (bannedMember.Count > 0)
+						if (bannedMember?.Count > 0)
 						{
 							connection.Send<GuildJoinStatusMessage>("guild:join _reply:banned", new GuildJoinStatusMessage
 							{
@@ -52,30 +54,32 @@ namespace Api.Handlers.Main.Guild
 							return;
 						}
 
-						// TODO: Check if the user is already in
-						List<GuildMember> guildMember = GlobalStorage.DataBase?.FetchRecords<GuildMember>(GlobalStorage.Name, "GuildMembers", new string[,]
-						{
-							{ "UserIdentifier", userIdentifier },
-							{ "GuildReference", message.Identifier }
-						}) ?? new List<GuildMember>();
+						List<GuildMember>? guildMember = GlobalStorage.DataBaseConnection?
+							.GetDatabase(GlobalStorage.Name)
+							.GetCollection<GuildMember>("GuildMembers")
+							.Find(Builders<GuildMember>.Filter.Where((x) => x.GuildReference == message.Identifier && x.UserIdentifier == userIdentifier))
+							.ToList();
 
-						if (guildMember.Count > 0)
+						if (guildMember?.Count > 0)
 						{
-							Console.WriteLine("MEM_ALR_EXS");
-							connection.Send<GuildJoinStatusMessage>("guild:join _reply:member-already-exists", new GuildJoinStatusMessage
+							connection.Send("guild:join _reply:member-already-exists", new GuildJoinStatusMessage
 							{
 								Identifier = message.Identifier
 							});
 							return;
 						}
 
-						GlobalStorage.DataBase?.InsertRecord(GlobalStorage.Name, "GuildMembers", new BsonDocument
-						{
-							{ "GuildReference", message.Identifier },
-							{ "UserIdentifier", userIdentifier }
-						});
+						GlobalStorage.DataBaseConnection?
+							.GetDatabase(GlobalStorage.Name)
+							.GetCollection<GuildMember>("Guildmembers")
+							.InsertOne(new GuildMember
+							{
+								GuildReference = message.Identifier,
+								UserIdentifier = userIdentifier
+							});
 
-						connection.Send<GuildJoinStatusMessage>("guild:join _reply:success", new GuildJoinStatusMessage {
+						connection.Send<GuildJoinStatusMessage>("guild:join _reply:success", new GuildJoinStatusMessage
+						{
 							Identifier = message.Identifier
 						});
 						return;
