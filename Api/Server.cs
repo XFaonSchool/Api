@@ -50,6 +50,8 @@ class Server
 {
     public static void Main()
     {
+		Logger.SetTimeStampsMode(true);
+
         Logger.Info("Axeri API GateWay Server");
 		Logger.Info("Reading configuration file");
 
