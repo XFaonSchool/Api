@@ -60,7 +60,7 @@ namespace Api.Handlers.Account
 				return;
 			}
 
-			throw new Exception("The account does not exist");
+			throw new Exception("does-not-exist");
 		}
 	}
 }

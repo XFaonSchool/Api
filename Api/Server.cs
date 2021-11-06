@@ -80,7 +80,21 @@ class Server
 
         ApiHost api = GlobalStorage.Api = new ApiHost(new ApiHostSettings
         {
-            Port = config.Api.Port
+            Port = config.Api.Port,
+			PeerAuth = new ApiPeerAuth
+			{
+				Key1 = "1",
+				Key2 = "1"
+			},
+			PeerNodes = new List<ApiPeerNode> 
+			{ 
+				new ApiPeerNode
+				{
+					Key1 = "1",
+					Key2 = "1",
+					Port = config.Api.Port
+				}
+			}
         });
 
         api.OnReady(() =>
