@@ -12,10 +12,8 @@ namespace Api.Handlers.Guild
 	{
 		public Guild()
 		{
-			Logger.Info("P");
 			GlobalStorage.Api?.OnOpen((connection) =>
 			{
-				Logger.Info("L");
 				_ = new GuildJoinManager(connection);
 			});
 		}

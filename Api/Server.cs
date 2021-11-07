@@ -95,11 +95,6 @@ class Server
 		DebugLogger.Success("Connected to API database");
 		Logger.Success("Connected to API database");
 
-		GlobalStorage.DataBaseConnection?
-			.GetDatabase(GlobalStorage.Name)
-			.GetCollection<OnlineInstance>("OnlineInstances")
-			.DeleteMany(Builders<OnlineInstance>.Filter.Where((x) => true));
-
         Logger.Info("Starting API gateway server");
 		DebugLogger.Info("Starting API gateway server");
 
@@ -122,7 +117,12 @@ class Server
 			}
 		});
 
-        api.OnReady(() =>
+		GlobalStorage.DataBaseConnection?
+			.GetDatabase(GlobalStorage.Name)
+			.GetCollection<OnlineInstance>("OnlineInstances")
+			.DeleteMany(Builders<OnlineInstance>.Filter.Where((x) => x.Node == "ws://0.0.0.0:" + config.Api.Port));
+
+		api.OnReady(() =>
         {
             Logger.Success($"Server is ready at listening address '{api.ListeningAddress}'");
 			DebugLogger.Info($"Server started listening on address '${api.ListeningAddress}'");

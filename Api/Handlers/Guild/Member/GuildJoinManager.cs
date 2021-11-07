@@ -34,7 +34,6 @@ namespace Api.Handlers.Guild.Member
 		{
 			connection.OnMessage("guild:join", (raw) =>
 			{
-				Logger.Info("R");
 				GlobalStorage.CheckLoggedIn(connection, (userIdentifier) =>
 				{
 					GuildJoinMessage message = JsonHandler.Parse<GuildJoinMessage>(raw);
