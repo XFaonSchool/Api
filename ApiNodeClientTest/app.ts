@@ -55,7 +55,7 @@ axeri.onReady(() => {
 	axeri.transportToken.onCreateEndPointSuccess((id) => {
 		console.log("Created endpoint with id '" + id + "'");
 
-		axeri.transportToken.sendToEndpoint(id, "Hello Token");
+		axeri.transportToken.sendToEndPoint(id, "Hello Token");
 	});
 
 	axeri.transportToken.createEndPoint();

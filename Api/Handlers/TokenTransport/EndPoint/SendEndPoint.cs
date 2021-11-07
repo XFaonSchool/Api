@@ -15,6 +15,11 @@ namespace Api.Handlers.TokenTransport.EndPoint
 		public string? Token = null;
 	}
 
+	public class EndPointTransportResponse
+	{
+		public string Token = "";
+	}
+
 	public class SendEndPoint
 	{
 		public SendEndPoint(ApiConnection connection)
@@ -35,7 +40,10 @@ namespace Api.Handlers.TokenTransport.EndPoint
 
 					if (locations?.Count > 0)
 					{
-
+						GlobalStorage.Api?.Send("ws://localhost:7090", connection.Identifier, "token-transport:receive-token", new EndPointTransportResponse
+						{
+							Token = message.Token
+						});
 						return;
 					}
 
