@@ -9,7 +9,7 @@ using Exolix.Terminal;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
-namespace Api.Handlers.Main.Guild
+namespace Api.Handlers.Guild.Member
 {
 	public class GuildJoinMessage
 	{
@@ -28,12 +28,13 @@ namespace Api.Handlers.Main.Guild
 		public string UserIdentifier = "";
 	}
 
-	public class GuildManager
+	public class GuildJoinManager
 	{
-		public GuildManager(ApiConnection connection)
+		public GuildJoinManager(ApiConnection connection)
 		{
 			connection.OnMessage("guild:join", (raw) =>
 			{
+				Logger.Info("R");
 				GlobalStorage.CheckLoggedIn(connection, (userIdentifier) =>
 				{
 					GuildJoinMessage message = JsonHandler.Parse<GuildJoinMessage>(raw);

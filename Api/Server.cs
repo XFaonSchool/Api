@@ -1,4 +1,5 @@
 ﻿using Api.Handlers.Account;
+using Api.Handlers.Guild;
 using Api.Handlers.Main;
 using Api.Handlers.Main.Login;
 using Exolix.ApiHost;
@@ -28,12 +29,13 @@ public class GlobalStorage
 
 		if (instances?.Count > 0)
 		{
+			DebugLogger.Info("User passed checks for being logged in from connection address '" + connection.RemoteAddress + "', account identifier '" + instances[0].UserIdentifier + "', connection identifier '" + connection.Identifier + "'");
 			isLoggedIn(instances[0].UserIdentifier);
 			return;
 		}
 
-		Logger.Warning("User was required to be logged in but failed all checks, closing '" + connection.RemoteAddress + "'");
 		connection.Close();
+		DebugLogger.Warning("A user was expected to be logged in for the message but was not, server closed connection from '" + connection.RemoteAddress + "'");
 	}
 }
  
@@ -59,6 +61,8 @@ class Server
     public static void Main()
     {
 		Logger.SetTimeStampsMode(true);
+		DebugLogger.SetDebugLogFile();
+		DebugLogger.SetDebugLogOverFlowSize(50000);
 
         Logger.Info("Axeri API GateWay Server");
 		Logger.Info("Reading configuration file");
@@ -67,10 +71,15 @@ class Server
 
 		try
 		{
+			DebugLogger.Info($"Looking for server config at {Path.Join(Directory.GetCurrentDirectory(), "./ Config.json")}");
 			string configRaw = File.ReadAllText(Path.Join(Directory.GetCurrentDirectory(), "./Config.json"));
 			config = JsonHandler.Parse<ServerConfig>(configRaw);
+
+			Logger.Success("Server config found");
+			DebugLogger.Success($"server config found at {Path.Join(Directory.GetCurrentDirectory(), "./ Config.json")}");
 		} catch (Exception)
 		{
+			DebugLogger.Warning($"No server config found at path {Path.Join(Directory.GetCurrentDirectory(), "./ Config.json")}");
 			Logger.Warning("No server config detected, using default config instead");
 			config = new ServerConfig();
 		}
@@ -78,9 +87,13 @@ class Server
 		GlobalStorage.Config = config;
 		GlobalStorage.Name = config.DataBaseName;
         Logger.Info("Connecting to API database");
+		DebugLogger.Info("Starting to connect to API database");
 
 		GlobalStorage.DataBaseConnection = new MongoClient(config.DataBase.ConnectAddress);
 		GlobalStorage.DataBase = GlobalStorage.DataBaseConnection.GetDatabase(GlobalStorage.Name);
+
+		DebugLogger.Success("Connected to API database");
+		Logger.Success("Connected to API database");
 
 		GlobalStorage.DataBaseConnection?
 			.GetDatabase(GlobalStorage.Name)
@@ -88,6 +101,7 @@ class Server
 			.DeleteMany(Builders<OnlineInstance>.Filter.Where((x) => true));
 
         Logger.Info("Starting API gateway server");
+		DebugLogger.Info("Starting API gateway server");
 
 		ApiHost api = GlobalStorage.Api = new ApiHost(new ApiHostSettings
 		{
@@ -111,13 +125,16 @@ class Server
         api.OnReady(() =>
         {
             Logger.Success($"Server is ready at listening address '{api.ListeningAddress}'");
+			DebugLogger.Info($"Server started listening on address '${api.ListeningAddress}'");
 
-			new Account();
-			new Main();
+			_ = new Account();
+			_ = new Main();
+			_ = new Guild();
 
             api.OnOpen((connection) =>
             {
                 Logger.Info($"New connection opened from '{connection.RemoteAddress}'");
+				DebugLogger.Info($"New client connected from '{connection.RemoteAddress}'");
             });
         });
 

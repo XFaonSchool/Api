@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Api.Handlers.Main.Guild;
 using Api.Handlers.Main.Login;
 using Exolix.Terminal;
 using MongoDB.Driver;
@@ -27,7 +26,6 @@ namespace Api.Handlers.Main
 				});
 
 				new AccountLogin(connection);
-				new GuildManager(connection);
 			});
 		}
 	}

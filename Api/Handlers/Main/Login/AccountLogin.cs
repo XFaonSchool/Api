@@ -60,7 +60,7 @@ namespace Api.Handlers.Main.Login
 							ConnectionIdentifier = connection.Identifier
 						});
 
-						Logger.Success($"Account login from '{connection.RemoteAddress}'");
+						DebugLogger.Info("An account logged in from '" + connection.RemoteAddress + "', user identifier '" + accountData.Identifier + "', and connection identifier '" + connection.Identifier + "'");
 						connection.Send("login _reply:success", new LoginSuccessMessage { });
 					}
 				} catch (Exception)
