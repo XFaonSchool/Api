@@ -10,3 +10,15 @@ To create an account, messages must be sent to the channel `account:register`
 	"Password": "Account Password"
 }
 ```
+
+## Posible Responses
+
+## Success
+Channel: `account:register _reply:success`
+
+### Reply Body
+```json
+{
+	"Token": "Account Token"
+}
+```
