@@ -44,21 +44,7 @@ axeri.onReady(() => {
 	let username = "";
 	let password = "";
 
-	rl.question("UserName: ", (ans) => {
-		username = ans;
-
-		rl.question("Password: ", (ans) => {
-			password = ans;
-			rl.close();
-
-			axeri.account.loginGetToken({
-				EmailUserName: username,
-				Password: password
-			});
-
-
-		});
-	});
+	axeri.transportToken.createEndPoint();
 });
 
 axeri.run();

@@ -2,6 +2,7 @@ import { ExolixApi } from "@axeridev/exolix-node";
 import deepmerge from "deepmerge";
 import { Account } from "./Account/Account";
 import { Guild } from "./Guild/Guild";
+import { TransportToken } from "./TokenTransport/TokenTransport";
 
 export class AxeriApiSettings {
 	port?: number;
@@ -13,6 +14,7 @@ export class AxeriApi {
 
 	public account: Account;
 	public guild: Guild;
+	public transportToken: TransportToken;
 
 	public constructor(settings: AxeriApiSettings = {}) {
 		settings = deepmerge <AxeriApiSettings>({
@@ -25,6 +27,7 @@ export class AxeriApi {
 
 		this.account = new Account(this.api);
 		this.guild = new Guild(this.api);
+		this.transportToken = new TransportToken(this.api);
 
 		this.api.onOpen(() => {
 			this.triggerOnReadyEvents();

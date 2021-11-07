@@ -2,6 +2,7 @@
 using Api.Handlers.Guild;
 using Api.Handlers.Main;
 using Api.Handlers.Main.Login;
+using Api.Handlers.TokenTransport;
 using Exolix.ApiHost;
 using Exolix.Json;
 using Exolix.Terminal;
@@ -130,6 +131,7 @@ class Server
 			_ = new Account();
 			_ = new Main();
 			_ = new Guild();
+			_ = new TokenTransport();
 
             api.OnOpen((connection) =>
             {
