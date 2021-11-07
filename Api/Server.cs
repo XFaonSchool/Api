@@ -4,7 +4,6 @@ using Api.Handlers.Main.Login;
 using Exolix.ApiHost;
 using Exolix.Json;
 using Exolix.Terminal;
-using MongoDB.Bson;
 using MongoDB.Driver;
 
 public class GlobalStorage
@@ -17,7 +16,15 @@ public class GlobalStorage
 
 	public static void CheckLoggedIn(ApiConnection connection, Action<string> isLoggedIn)
 	{
-		List<OnlineInstance>? instances = DataBaseConnection?.GetDatabase(Name).GetCollection<OnlineInstance>("Accounts").Find(Builders<OnlineInstance>.Filter.Where((x) => x.ConnectionIdentifier == connection.Identifier && x.Node == Api!.ListeningAddress)).ToList();
+		List<OnlineInstance>? instances = DataBaseConnection?
+			.GetDatabase(Name)
+			.GetCollection<OnlineInstance>("OnlineInstances")
+			.Find(Builders<OnlineInstance>
+				.Filter
+				.Where((x) => 
+					x.ConnectionIdentifier == connection.Identifier && x.Node == Api!.ListeningAddress)
+				)
+			.ToList();
 
 		if (instances?.Count > 0)
 		{
@@ -25,6 +32,7 @@ public class GlobalStorage
 			return;
 		}
 
+		Logger.Warning("User was required to be logged in but failed all checks, closing '" + connection.RemoteAddress + "'");
 		connection.Close();
 	}
 }
@@ -63,6 +71,7 @@ class Server
 			config = JsonHandler.Parse<ServerConfig>(configRaw);
 		} catch (Exception)
 		{
+			Logger.Warning("No server config detected, using default config instead");
 			config = new ServerConfig();
 		}
 
@@ -80,16 +89,16 @@ class Server
 
         Logger.Info("Starting API gateway server");
 
-        ApiHost api = GlobalStorage.Api = new ApiHost(new ApiHostSettings
-        {
-            Port = config.Api.Port,
+		ApiHost api = GlobalStorage.Api = new ApiHost(new ApiHostSettings
+		{
+			Port = config.Api.Port,
 			PeerAuth = new ApiPeerAuth
 			{
 				Key1 = "1",
 				Key2 = "1"
 			},
-			PeerNodes = new List<ApiPeerNode> 
-			{ 
+			PeerNodes = new List<ApiPeerNode>
+			{
 				new ApiPeerNode
 				{
 					Key1 = "1",
@@ -97,11 +106,11 @@ class Server
 					Port = config.Api.Port
 				}
 			}
-        });
+		});
 
         api.OnReady(() =>
         {
-            Logger.Success("Server is ready");
+            Logger.Success($"Server is ready at listening address '{api.ListeningAddress}'");
 
 			new Account();
 			new Main();

@@ -32,6 +32,7 @@
     <None Include="App.ts" />
     <Content Include=".gitignore" />
     <Content Include=".npmignore" />
+    <Content Include="Config.json" />
     <Content Include="package.json" />
     <Content Include="README.md" />
     <Content Include="tsconfig.json" />

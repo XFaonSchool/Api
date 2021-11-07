@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Api.Handlers.Account;
 using Exolix.ApiHost;
 using Exolix.Json;
+using Exolix.Terminal;
 using MongoDB.Bson;
 
 namespace Api.Handlers.Main.Login
@@ -59,6 +60,7 @@ namespace Api.Handlers.Main.Login
 							ConnectionIdentifier = connection.Identifier
 						});
 
+						Logger.Success($"Account login from '{connection.RemoteAddress}'");
 						connection.Send("login _reply:success", new LoginSuccessMessage { });
 					}
 				} catch (Exception)

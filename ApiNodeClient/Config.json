@@ -1,0 +1,8 @@
+{
+  "DataBase": {
+    "ConnectAddress": "mongodb+srv://admin:555870cmsd@axerisys.hyb9p.mongodb.net/test?authSource=admin&replicaSet=atlas-rzqbds-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true"
+  },
+  "Api": {
+    "Port": 7090
+  }
+}

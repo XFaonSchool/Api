@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Exolix.ApiHost;
 using Exolix.Json;
+using Exolix.Terminal;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
@@ -71,7 +72,7 @@ namespace Api.Handlers.Main.Guild
 
 						GlobalStorage.DataBaseConnection?
 							.GetDatabase(GlobalStorage.Name)
-							.GetCollection<GuildMember>("Guildmembers")
+							.GetCollection<GuildMember>("GuildMembers")
 							.InsertOne(new GuildMember
 							{
 								GuildReference = message.Identifier,
