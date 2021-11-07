@@ -1,7 +1,9 @@
 import { AxeriApi } from "@axeridev/axeri-node-api/app";
 import readline from "readline";
 
-const axeri = new AxeriApi();
+const axeri = new AxeriApi({
+	port: 7090
+});
 
 axeri.onReady(() => {
 	console.log("Bot Ready");

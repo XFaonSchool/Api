@@ -1,6 +1,11 @@
 import { ExolixApi } from "@axeridev/exolix-node";
+import deepmerge from "deepmerge";
 import { Account } from "./Account/Account";
 import { Guild } from "./Guild/Guild";
+
+export class AxeriApiSettings {
+	port?: number;
+}
 
 export class AxeriApi {
 	private api: ExolixApi;
@@ -9,9 +14,13 @@ export class AxeriApi {
 	public account: Account;
 	public guild: Guild;
 
-	public constructor() {
+	public constructor(settings: AxeriApiSettings = {}) {
+		settings = deepmerge <AxeriApiSettings>({
+			port: 1427
+		}, settings);
+	
 		this.api = new ExolixApi({
-			port: 7090
+			port: settings.port
 		});
 
 		this.account = new Account(this.api);
@@ -39,5 +48,3 @@ export class AxeriApi {
 		this.onReadyEvents.forEach((event) => event());
 	}
 }
-
-new AxeriApi();

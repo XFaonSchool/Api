@@ -1,0 +1,9 @@
+{
+  "name": "api-docs",
+  "version": "0.0.0",
+  "description": "ApiDocs",
+  "main": "app.js",
+  "author": {
+    "name": ""
+  }
+}
