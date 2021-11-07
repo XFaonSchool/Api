@@ -48,7 +48,16 @@ axeri.onReady(() => {
 		console.log("Failed to create token transport endpoint for reason '" + reason + "'");
 	});
 
-	axeri.transportToken.createEndPoint();
+	axeri.transportToken.onTokenResponse((token) => {
+		console.log("Got token a called '" + token + "'");
+	});
+
+	axeri.transportToken.onCreateEndPointSuccess((id) => {
+		console.log("Created endpoint with id '" + id + "'");
+
+		axeri.transportToken.sendToEndpoint(id, "Hello Token");
+	});
+
 	axeri.transportToken.createEndPoint();
 });
 

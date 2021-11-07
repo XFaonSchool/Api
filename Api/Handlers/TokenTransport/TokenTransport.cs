@@ -23,6 +23,7 @@ namespace Api.Handlers.TokenTransport
 			GlobalStorage.Api?.OnOpen((connection) =>
 			{
 				_ = new CreateEndPoint(connection);
+				_ = new SendEndPoint(connection);
 			});
 		}
 	}
