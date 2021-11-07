@@ -11,7 +11,8 @@ To create an account, messages must be sent to the channel `account:register`
 }
 ```
 
-## Posible Responses
+## Possible Responses
+Reply Responses
 
 ## Success
 Channel: `account:register _reply:success`
