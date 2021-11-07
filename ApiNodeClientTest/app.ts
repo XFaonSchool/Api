@@ -44,6 +44,11 @@ axeri.onReady(() => {
 	let username = "";
 	let password = "";
 
+	axeri.transportToken.onCreateEndPointError((reason) => {
+		console.log("Failed to create token transport endpoint for reason '" + reason + "'");
+	});
+
+	axeri.transportToken.createEndPoint();
 	axeri.transportToken.createEndPoint();
 });
 

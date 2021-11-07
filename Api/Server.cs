@@ -123,6 +123,11 @@ class Server
 			.GetCollection<OnlineInstance>("OnlineInstances")
 			.DeleteMany(Builders<OnlineInstance>.Filter.Where((x) => x.Node == "ws://0.0.0.0:" + config.Api.Port));
 
+		GlobalStorage.DataBaseConnection?
+			.GetDatabase(GlobalStorage.Name)
+			.GetCollection<OnlineInstance>("TokenTransportLocations")
+			.DeleteMany(Builders<OnlineInstance>.Filter.Where((x) => x.Node == "ws://0.0.0.0:" + config.Api.Port));
+
 		api.OnReady(() =>
         {
             Logger.Success($"Server is ready at listening address '{api.ListeningAddress}'");
