@@ -1,14 +1,11 @@
-import React from "react"
+import * as React from "react"
 import ReactDOM from "react-dom"
-import "./index.sass"
+import "./index.scss" 
 import App from "./App"
-import { ThemeProvider } from "@fluentui/react";
 
 ReactDOM.render(
-	<ThemeProvider applyTo="body">
-		<React.StrictMode>
-			<App />
-		</React.StrictMode>
-	</ThemeProvider>,
+	<React.StrictMode>
+		<App />
+	</React.StrictMode>,
 	document.getElementById("root")
 )
