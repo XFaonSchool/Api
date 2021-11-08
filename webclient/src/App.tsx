@@ -1,19 +1,33 @@
-import { useState } from 'react'
-import { Router } from 'react-router'
 import './App.less'
 import RouterView from './components/RouterView'
-import { createBrowserHistory } from "history";
 import SideBarUserItem from "./components/sideBarFriendItem/SideBarUserItem";
 import { currentTheme } from './components/Theme';
 import { TextField } from '@fluentui/react';
+import { Router, useNavigate } from 'react-router-dom';
+import { createBrowserHistory } from "history";
+
+export function HandleLoginChecks() {
+	function handleLoginChecks() {
+		const goTo = useNavigate();
+
+		if (!localStorage.getItem("token")) {
+			goTo("/login");
+			return;
+		}
+
+		
+	}
+
+	handleLoginChecks();
+	return (<></>); 
+}
 
 function App() {
-	const [count, setCount] = useState(0)
-	const history = createBrowserHistory();
-
 	return (
 		<div className="_app">
-			<Router history={history}>
+			<Router location="/" navigator={createBrowserHistory()}>
+				<HandleLoginChecks />
+
 				<div className="side-bar">
 					<div className="rail">
 						<button className="rail-button">

@@ -13,6 +13,11 @@ const api = new AxeriApi({
 	port: 7090
 });
 
+api.onReady(() => {
+	console.info("Axeri API server has been connected and is ready for requests");
+});
+
+export { api };
 api.run();
 
 const cssTheme = themeToCssVars(currentTheme);

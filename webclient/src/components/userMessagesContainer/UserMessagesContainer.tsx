@@ -11,7 +11,7 @@ function UserMessagesContainer() {
 			<div className="main">
 				<div className="messages">
 					<div className="header">
-						<Persona className="user" size={PersonaSize.size8} presence={PersonaPresence.away} text="Ectrix Cato" />
+						<Persona className="user" size={PersonaSize.size8} presence={PersonaPresence.online} text="Ectrix Cato" />
 
 						<div className="right">
 							<button className="toggle" onClick={() => memberListState ? setMemberListState(false) : setMemberListState(true)}>

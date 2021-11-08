@@ -1,6 +1,5 @@
 import { Persona, PersonaPresence, PersonaSize } from "@fluentui/react";
-import { useHistory } from "react-router";
-import { Link, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { currentTheme } from "../Theme";
 import "./Style.less";
 
@@ -12,18 +11,12 @@ export interface PropType {
 }
 
 function SideBarUserItem(props: PropType) {
-	const history = useHistory();
-
-	function handleClick() {
-		history.push("/dm/" + props.userId);
-	}
-
 	return (
 		<NavLink style={
 			{
 				background: currentTheme.palette.neutralLighter
 			}
-		} className="_side-bar-user-item" exact={true} to={"/dm/" + props.userId}>
+		} className="_side-bar-user-item" to={"/dm/" + props.userId}>
 			<Persona
 				secondaryText={props.status}
 				text={props.name}

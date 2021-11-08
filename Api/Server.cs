@@ -16,7 +16,7 @@ public class GlobalStorage
 	public static IMongoDatabase? DataBase;
 	public static string Name = "Axeri";
 
-	public static void CheckLoggedIn(ApiConnection connection, Action<string> isLoggedIn)
+	public static void CheckLoggedIn(ApiConnection connection, Action<string> isLoggedIn, Action? isNotLoggedIn)
 	{
 		List<OnlineInstance>? instances = DataBaseConnection?
 			.GetDatabase(Name)
@@ -35,8 +35,15 @@ public class GlobalStorage
 			return;
 		}
 
-		connection.Close();
-		DebugLogger.Warning("A user was expected to be logged in for the message but was not, server closed connection from '" + connection.RemoteAddress + "'");
+		if (isNotLoggedIn != null)
+		{
+			connection.Close();
+			DebugLogger.Warning("A user was expected to be logged in for the message but was not, server closed connection from '" + connection.RemoteAddress + "'");
+			
+			return;
+		}
+
+		isNotLoggedIn!();
 	}
 }
  

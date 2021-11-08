@@ -1,10 +1,10 @@
-import { Switch, Route } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Friends from "../routes/Friends";
 import Main from "../routes/Main";
 
 function RouterView() {
 	return (
-		<Switch>
+		<Routes>
 			<Route path="/friends">
 				<Friends />
 			</Route>
@@ -12,7 +12,7 @@ function RouterView() {
 			<Route path="/">
 				<Main />
 			</Route>
-		</Switch>
+		</Routes>
 	);
 }
 
