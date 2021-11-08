@@ -13,6 +13,8 @@ Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "ApiNodeClientTest", "ApiNod
 EndProject
 Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "ApiDocs", "ApiDocs\ApiDocs.njsproj", "{AA815976-AD9F-4396-829E-B0D594C27BCE}"
 EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "WebClient", "WebClient\WebClient.esproj", "{231ADB6F-B9EB-4DFB-9EDD-59C4621DBFCC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +63,18 @@ Global
 		{AA815976-AD9F-4396-829E-B0D594C27BCE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AA815976-AD9F-4396-829E-B0D594C27BCE}.Release|x64.ActiveCfg = Release|Any CPU
 		{AA815976-AD9F-4396-829E-B0D594C27BCE}.Release|x64.Build.0 = Release|Any CPU
+		{231ADB6F-B9EB-4DFB-9EDD-59C4621DBFCC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{231ADB6F-B9EB-4DFB-9EDD-59C4621DBFCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{231ADB6F-B9EB-4DFB-9EDD-59C4621DBFCC}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{231ADB6F-B9EB-4DFB-9EDD-59C4621DBFCC}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{231ADB6F-B9EB-4DFB-9EDD-59C4621DBFCC}.Debug|x64.Build.0 = Debug|Any CPU
+		{231ADB6F-B9EB-4DFB-9EDD-59C4621DBFCC}.Debug|x64.Deploy.0 = Debug|Any CPU
+		{231ADB6F-B9EB-4DFB-9EDD-59C4621DBFCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{231ADB6F-B9EB-4DFB-9EDD-59C4621DBFCC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{231ADB6F-B9EB-4DFB-9EDD-59C4621DBFCC}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{231ADB6F-B9EB-4DFB-9EDD-59C4621DBFCC}.Release|x64.ActiveCfg = Release|Any CPU
+		{231ADB6F-B9EB-4DFB-9EDD-59C4621DBFCC}.Release|x64.Build.0 = Release|Any CPU
+		{231ADB6F-B9EB-4DFB-9EDD-59C4621DBFCC}.Release|x64.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
