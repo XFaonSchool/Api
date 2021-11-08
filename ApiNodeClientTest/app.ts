@@ -1,64 +1,30 @@
-import { AxeriApi } from "@axeridev/axeri-node-api/app";
-import readline from "readline";
+import { AxeriApi } from "@axeridev/axeri-node-api/App";
 
 const axeri = new AxeriApi({
-	port: 7090
+    port: 7090
 });
 
 axeri.onReady(() => {
-	console.log("Bot Ready");
+    console.log("Axeri's bot is ready");
 
-	axeri.account.onLoginTokenSuccess(() => {
-		console.log("Logged in!");
+    axeri.account.onLoginTokenSuccess(() => {
+        console.log("Account logged in");
 
-		setTimeout(() => {
-			axeri.guild.onJoinSuccess((id) => {
-				console.log("Guild: Joined '" + id + "'");
-			});
 
-			axeri.guild.onJoinFailed((id, reason) => {
-				console.log("Guild Error: Failed to join '" + id + "' for reason '" + reason + "'");
-			});
+    });
 
-			axeri.guild.joinGuild("g:1a");
-		});
-	});
+    axeri.account.onLoginTokenFailed((reason) => {
+        console.log("Failed to login with token because \"" + reason + "\"");
+    });
 
-	axeri.account.onLoginTokenFailed(() => {
-		console.log("Failed to login");
-	});
+    axeri.account.onLoginGetTokenSuccess((token) => {
+        axeri.account.loginToken(token);
+    });
 
-	axeri.account.onLoginGetTokenSuccess((token) => {
-		axeri.account.loginToken(token);
-	});
-
-	axeri.account.onLoginGetTokenFailed((reason) => {
-		console.log("Failed to login because reason '" + reason + "'");
-	});
-
-	const rl = readline.createInterface({
-		input: process.stdin,
-		output: process.stdout
-	});
-
-	let username = "";
-	let password = "";
-
-	axeri.transportToken.onCreateEndPointError((reason) => {
-		console.log("Failed to create token transport endpoint for reason '" + reason + "'");
-	});
-
-	axeri.transportToken.onTokenResponse((token) => {
-		console.log("Got token a called '" + token + "'");
-	});
-
-	axeri.transportToken.onCreateEndPointSuccess((id) => {
-		console.log("Created endpoint with id '" + id + "'");
-
-		axeri.transportToken.sendToEndPoint(id, "Hello Token");
-	});
-
-	axeri.transportToken.createEndPoint();
+    axeri.account.loginGetToken({
+        EmailUserName: "XFaon",
+        Password: "pass-word"
+    });
 });
 
 axeri.run();

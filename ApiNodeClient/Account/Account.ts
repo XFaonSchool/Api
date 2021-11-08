@@ -29,7 +29,7 @@ export class Account {
 	private onRegisterSuccessEvents: ((token: string) => void)[] = [];
 	private onLoginGetTokenSuccessEvents: ((token: string) => void)[] = [];
 	private onLoginTokenSuccessEvents: (() => void)[] = [];
-	private onLoginTokenFailedEvents: (() => void)[] = [];
+	private onLoginTokenFailedEvents: ((reason: "already-logged-in" | "invalid") => void)[] = [];
 	private onLoginGetTokenFailedEvents: ((reason: "bad-auth" | "invalid-account") => void)[] = [];
 
 	public isLoggedIn = false;
@@ -42,11 +42,12 @@ export class Account {
 		});
 
 		this.api.onMessage("login _reply:success", () => this.triggerOnLoginTokenSuccess());
-		this.api.onMessage("login _reply:failed", () => this.triggerOnLoginTokenFailed());
+		this.api.onMessage("login _reply:invalid", () => this.triggerOnLoginTokenFailedEvents("invalid"));
+		this.api.onMessage("login _reply:already-logged-in", () => this.triggerOnLoginTokenFailedEvents("already-logged-in"));
 
 		this.api.onMessage<LoginGetTokenMessage>("account:login-get-token _reply:success", (message) => this.triggerOnLoginGetTokenSuccess(message.Token));
-		this.api.onMessage<LoginErrorResponse>("account:login-get-token _reply:bad-auth", (message) => this.triggerOnLoginGetTokenFailed("bad-auth"));
-		this.api.onMessage<LoginErrorResponse>("account:login-get-token _reply:does-not-exist", (message) => this.triggerOnLoginGetTokenFailed("invalid-account"));
+		this.api.onMessage<LoginErrorResponse>("account:login-get-token _reply:bad-auth", (message) => this.triggerOnLoginGetTokenFailedEvents("bad-auth"));
+		this.api.onMessage<LoginErrorResponse>("account:login-get-token _reply:does-not-exist", (message) => this.triggerOnLoginGetTokenFailedEvents("invalid-account"));
 	}
 
 	public registerNew(details: AccountRegisterDetails) {
@@ -67,7 +68,7 @@ export class Account {
 		this.onRegisterSuccessEvents.push(action);
 	}
 
-	public triggerOnRegisterSuccess(token: string) {
+	private triggerOnRegisterSuccess(token: string) {
 		this.onRegisterSuccessEvents.forEach((event) => event(token));
 	}
 
@@ -79,7 +80,7 @@ export class Account {
 		this.onLoginGetTokenSuccessEvents.push(action);
 	}
 
-	public triggerOnLoginGetTokenSuccess(token: string) {
+	private triggerOnLoginGetTokenSuccess(token: string) {
 		this.onLoginGetTokenSuccessEvents.forEach((event) => event(token));
 	}
 
@@ -87,21 +88,21 @@ export class Account {
 		this.onLoginGetTokenFailedEvents.push(action);
 	}
 
-	public triggerOnLoginGetTokenFailed(reason: "bad-auth" | "invalid-account") {
+	private triggerOnLoginGetTokenFailedEvents(reason: "bad-auth" | "invalid-account") {
 		this.onLoginGetTokenFailedEvents.forEach((event) => event(reason));
 	}
 
-	public triggerOnLoginTokenSuccess() {
+	private triggerOnLoginTokenSuccess() {
 		this.isLoggedIn = true;
 		this.onLoginTokenSuccessEvents.forEach((event) => event());
 	}
 
-	public onLoginTokenFailed(action: () => void) {
+	public onLoginTokenFailed(action: (reason: "already-logged-in" | "invalid") => void) {
 		this.onLoginTokenFailedEvents.push(action);
 	}
 
-	public triggerOnLoginTokenFailed() {
+	private triggerOnLoginTokenFailedEvents(reason: "already-logged-in" | "invalid") {
 		this.isLoggedIn = false;
-		this.onLoginTokenFailedEvents.forEach((event) => event());
+		this.onLoginTokenFailedEvents.forEach((event) => event(reason));
 	}
 }

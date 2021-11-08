@@ -8,6 +8,7 @@ using Exolix.ApiHost;
 using Exolix.Json;
 using Exolix.Terminal;
 using MongoDB.Bson;
+using MongoDB.Driver;
 
 namespace Api.Handlers.Main.Login
 {
@@ -46,6 +47,21 @@ namespace Api.Handlers.Main.Login
 			connection.OnMessage("login", (raw) =>
 			{
 				LoginMessage message = JsonHandler.Parse<LoginMessage>(raw);
+
+				List<OnlineInstance>? loggedInRecords = GlobalStorage.DataBaseConnection?
+					.GetDatabase(GlobalStorage.Name)
+					.GetCollection<OnlineInstance>("OnlineInstances")
+					.Find(Builders<OnlineInstance>
+						.Filter
+						.Where((x) => x.Node == GlobalStorage.Api!.ListeningAddress && x.ConnectionIdentifier == connection.Identifier))
+					.ToList();
+
+				if (loggedInRecords?.Count > 0)
+				{
+					connection.Send("login _reply:already-logged-in", new { });
+					return;
+				}
+
 				try
 				{
 					Instance accountInstance = new Instance(message.Token);
@@ -53,19 +69,23 @@ namespace Api.Handlers.Main.Login
 
 					if (accountData != null)
 					{
-						GlobalStorage.DataBaseConnection?.GetDatabase(GlobalStorage.Name).GetCollection<OnlineInstance>("OnlineInstances").InsertOne(new OnlineInstance
-						{
-							UserIdentifier = accountData.Identifier,
-							Node = GlobalStorage.Api!.ListeningAddress,
-							ConnectionIdentifier = connection.Identifier
-						});
+						GlobalStorage.DataBaseConnection?
+							.GetDatabase(GlobalStorage.Name)
+							.GetCollection<OnlineInstance>("OnlineInstances")
+							.InsertOne(new OnlineInstance
+								{
+									UserIdentifier = accountData.Identifier,
+									Node = GlobalStorage.Api!.ListeningAddress,
+									ConnectionIdentifier = connection.Identifier
+								}
+							);
 
 						DebugLogger.Info("An account logged in from '" + connection.RemoteAddress + "', user identifier '" + accountData.Identifier + "', and connection identifier '" + connection.Identifier + "'");
 						connection.Send("login _reply:success", new LoginSuccessMessage { });
 					}
 				} catch (Exception)
 				{
-					connection.Send("login _reply:failed", new LoginFailedMessage { });
+					connection.Send("login _reply:invalid", new LoginFailedMessage { });
 				}
 			});
 		}
