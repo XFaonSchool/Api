@@ -7,18 +7,22 @@ import { useLocation } from "react-router-dom";
 export function Login() {
 	const query = new URLSearchParams(useLocation().search);
 
-	function getRedirectReason(reason: string): string | null {
+	function getRedirectReason(reason: string, action: (reason: string) => any): string | null {
+		let answer = null as string;
+
 		if (reason == "not-logged-in") {
-			return "You must be logged in to use Axeri";
+			answer = "You must be logged in to use Axeri";
+
+			return action(answer);;
 		}
 
-		return null;
+		return answer;
     }
 
 	return (
 		<div className={FormPage.root}>
 			<div className={FormPage.content}>
-				<MessageBar messageBarType={MessageBarType.error}>{getRedirectReason(query.get("redirect-reason"))}</MessageBar>
+				{getRedirectReason(query.get("redirect-reason"), (reason) => <MessageBar messageBarType={MessageBarType.info}>{reason}</MessageBar>)}
 
 				<div className={FormPage.form}>
 					<h1>Login</h1>
@@ -26,7 +30,7 @@ export function Login() {
 
 					<TextField label="UserName or Email" underlined />
 					<br />
-					<TextField label="Password" type="password" underlined />
+					<TextField canRevealPassword label="Password" type="password" underlined />
 
 					<br />
 					<Stack horizontalAlign="end">
