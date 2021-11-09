@@ -8,7 +8,7 @@ export function MainPage() {
 	const navigate = useNavigate();
 
 	if (!loggedIn) {
-		navigate("/login");
+		navigate("/login?redirect-reason=not-logged-in");
 		return (<></>);
 	}
 
