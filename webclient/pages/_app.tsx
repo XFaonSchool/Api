@@ -37,6 +37,21 @@ const darkTheme = createTheme({
     }
 });
 
+const currentTheme = darkTheme;
+
+function insertStylesToDom() {
+    let prefix = ":root{";
+
+    for (let key in currentTheme.palette) {
+        prefix += "--" + key + ":" + currentTheme.palette[key] + ";";
+    }
+
+    let styles = document.createElement("style");
+    styles.innerHTML = prefix + "}";
+
+    document.head.appendChild(styles);
+}
+
 function _App({ Component, pageProps }: AppProps) {
     return (
         <ThemeProvider applyTo="body" theme={darkTheme}>
@@ -46,6 +61,7 @@ function _App({ Component, pageProps }: AppProps) {
 
                 </Head>
 
+                {typeof window == 'undefined' ? null : insertStylesToDom()}
                 {typeof window === 'undefined' ? null : <Component {...pageProps} />}
             </div>
         </ThemeProvider>

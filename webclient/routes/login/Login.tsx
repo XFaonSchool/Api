@@ -16,11 +16,11 @@ export function Login() {
     }
 
 	return (
-		<Stack className={styles.root}>
-			<div className="content">
+		<div className={FormPage.root}>
+			<div className={FormPage.content}>
 				<MessageBar messageBarType={MessageBarType.error}>{getRedirectReason(query.get("redirect-reason"))}</MessageBar>
 
-				<div className={styles.form}>
+				<div className={FormPage.form}>
 					<h1>Login</h1>
 					<br />
 
@@ -34,6 +34,6 @@ export function Login() {
 					</Stack>
 				</div>
 			</div>
-		</Stack>
+		</div>
 	);
 }

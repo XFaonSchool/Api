@@ -4,20 +4,19 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	background: blue;
+}
 
-	/*.content {
-		width: 500px;
-		margin: 20px;
+.content {
+	width: 500px;
+	margin: 20px;
+}
 
-		.form {
-			border-radius: 8px;
-			box-shadow: 0 1px 5px -4px #000;
-			background: red;
+.form {
+	box-shadow: 0 1px 10px -1px #000;
+	padding: 20px;
+	margin: 10px 0;
 
-			& > h1 {
-				margin: 0 0 10px 0;
-			}
-		}
-	}*/
+	& > h1 {
+		margin: 0 0 10px 0;
+	}
 }
