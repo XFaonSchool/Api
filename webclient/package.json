@@ -8,12 +8,14 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@axeridev/axeri-node-api": "file:../apiNodeClient",
     "next": "12.0.3",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-router-dom": "^6.0.1"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.16.0",
     "@types/node": "16.11.6",
     "@types/react": "17.0.34",
     "eslint": "7",

@@ -16,7 +16,7 @@ public class GlobalStorage
 	public static IMongoDatabase? DataBase;
 	public static string Name = "Axeri";
 
-	public static void CheckLoggedIn(ApiConnection connection, Action<string> isLoggedIn, Action? isNotLoggedIn)
+	public static void CheckLoggedIn(ApiConnection connection, Action<string> isLoggedIn, Action? isNotLoggedIn = null)
 	{
 		List<OnlineInstance>? instances = DataBaseConnection?
 			.GetDatabase(Name)

@@ -1,5 +1,12 @@
 import "../styles/globals.css";
-import type { AppProps } from "next/app"
+import type { AppProps } from "next/app";
+import { AxeriApi } from "../../apiNodeClient/App";
+
+const api = new AxeriApi({
+    port: 7090
+});
+
+api.run();
 
 function _App({ Component, pageProps }: AppProps) {
   return (

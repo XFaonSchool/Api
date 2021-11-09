@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 module.exports = {
-  reactStrictMode: true,
+    reactStrictMode: true,
+    experimental: {
+        externalDir: true
+    },
   async rewrites() {
     return [
       {
