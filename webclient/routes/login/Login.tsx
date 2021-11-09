@@ -2,7 +2,7 @@ import { DefaultButton, isIOS, MessageBar, MessageBarType, PrimaryButton, Stack,
 import * as React from "react";
 import styles from "./Login.module.scss";
 import FormPage from "../_shared/FormPage.module.scss";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 export function Login() {
 	const query = new URLSearchParams(useLocation().search);
@@ -33,7 +33,11 @@ export function Login() {
 					<TextField canRevealPassword label="Password" type="password" underlined />
 
 					<br />
-					<Stack horizontalAlign="end">
+					<Stack horizontal horizontalAlign="space-between">
+						<Stack>
+							<Link to="/register">Register</Link>
+						</Stack>
+
 						<PrimaryButton>Login</PrimaryButton>
 					</Stack>
 				</div>
