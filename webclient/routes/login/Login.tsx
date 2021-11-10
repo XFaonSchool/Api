@@ -1,11 +1,25 @@
 import { DefaultButton, isIOS, MessageBar, MessageBarType, PrimaryButton, Stack, TextField } from "@fluentui/react";
 import * as React from "react";
-import styles from "./Login.module.scss";
 import FormPage from "../_shared/FormPage.module.scss";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { FormEvent, useState } from "react";
+import { api } from "../../pages/_app";
+
+let onLoginError = (reason: "bad-auth" | "invalid-account") => { };
+let onLoginSuccess = (token) => { };
+
+api.account.onLoginGetTokenFailed((reason) => onLoginError(reason));
+api.account.onLoginGetTokenSuccess((token) => onLoginSuccess(token));
 
 export function Login() {
+	const navigate = useNavigate();
 	const query = new URLSearchParams(useLocation().search);
+
+	function checkLoggedIn() {
+		if (localStorage.getItem("token")) {
+			navigate("/login/logged-in");
+        }
+    }
 
 	function getRedirectReason(reason: string, action: (reason: string) => any): string | null {
 		let answer = null as string;
@@ -17,30 +31,96 @@ export function Login() {
 		}
 
 		return answer;
+	}
+
+	const loginErrorsDefault = {
+		userNameEmail: null,
+		password: null
+	};
+
+	const [loginErrors, setLoginErrors] = useState({
+		userNameEmail: null as string | null,
+		password: null as string | null
+	});
+
+	function handleSubmit(e: FormEvent<HTMLFormElement>) {
+		e.preventDefault();
+
+		const data = new FormData((e.target as HTMLFormElement));
+
+		onLoginSuccess = (token) => {
+			setLoginErrors(loginErrorsDefault);
+			localStorage.setItem("token", token);
+
+			navigate("/");
+		}
+
+		onLoginError = (reason) => {
+			const newState = { ...loginErrorsDefault }
+
+			if (reason == "invalid-account") {
+				(() => {
+					if ((data.get("user-name-email") as string).length == 0) {
+						newState.userNameEmail = "Please enter a user name";
+						return;
+					}
+
+					newState.userNameEmail = "That account doesn't seem to exist";
+				})();
+			}
+
+			if (reason == "bad-auth") {
+				(() => {
+					if ((data.get("password") as string).length == 0) {
+						newState.password = "Please enter a password";
+						return;
+                    }
+
+					newState.password = "Invalid password, please try again";
+				})();
+			}
+
+			setLoginErrors(newState);
+		}
+
+		api.account.loginGetToken({
+			EmailUserName: data.get("user-name-email") as string,
+			Password: data.get("password") as string
+		});
     }
 
 	return (
 		<div className={FormPage.root}>
+			{checkLoggedIn()}
+
 			<div className={FormPage.content}>
 				{getRedirectReason(query.get("redirect-reason"), (reason) => <MessageBar messageBarType={MessageBarType.info}>{reason}</MessageBar>)}
 
-				<div className={FormPage.form}>
+				<form onSubmit={handleSubmit} className={FormPage.form}>
 					<h1>Login</h1>
 					<br />
 
-					<TextField label="UserName or Email" underlined />
+					<TextField placeholder="Your UserName or Email" errorMessage={loginErrors.userNameEmail} name="user-name-email" label="UserName or Email" underlined />
 					<br />
-					<TextField canRevealPassword label="Password" type="password" underlined />
+					<TextField placeholder="Your Password" errorMessage={loginErrors.password} name="password" canRevealPassword label="Password" type="password" underlined />
 
 					<br />
 					<Stack horizontal horizontalAlign="space-between">
 						<Stack>
-							<Link to="/register">Register</Link>
+							<span className={FormPage.link}>
+								<span>Don't have an account? </span> 
+								<Link to="/register">Create Account</Link>
+							</span>
+
+							<span className={FormPage.link}>
+								<span>Forgot your password? </span>
+								<Link to="/login/reset">Reset Password</Link>
+							</span>
 						</Stack>
 
-						<PrimaryButton>Login</PrimaryButton>
+						<PrimaryButton type="submit">Login</PrimaryButton>
 					</Stack>
-				</div>
+				</form>
 			</div>
 		</div>
 	);

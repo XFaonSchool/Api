@@ -12,10 +12,10 @@ namespace Api.Handlers.Account.Register
 {
 	public class RegisterNewMessage
 	{
-		public string? UserName = null;
-		public string? Password = null;
-		public string? DisplayName = null;
-		public string? Email = null;
+		public string UserName = "";
+		public string Password = "";
+		public string DisplayName = "";
+		public string Email = "";
 	}
 
 	public class AccountRegisterSuccessMessage
@@ -30,29 +30,25 @@ namespace Api.Handlers.Account.Register
 			connection.OnMessage("account:register", (raw) =>
 			{
 				RegisterNewMessage message = JsonHandler.Parse<RegisterNewMessage>(raw);
-				
-				if (message.Email != null && message.UserName != null && message.DisplayName != null && message.Password != null)
+
+				string accountToken = "tkn:" + Guid.NewGuid().ToString() + "-" + Guid.NewGuid().ToString();
+				Random random = new Random();
+
+				GlobalStorage.DataBaseConnection?.GetDatabase(GlobalStorage.Name).GetCollection<AccountData>("Accounts").InsertOne(new AccountData
 				{
-					string accountToken = "tkn:" + Guid.NewGuid().ToString() + "-" + Guid.NewGuid().ToString();
-					Random random = new Random();
+					Email = message.Email.ToLower(),
+					Password = message.Password,
+					UserName = message.UserName.ToLower(),
+					DisplayName = message.DisplayName,
+					Token = accountToken,
+					EmailVerified = false,
+					Identifier = "a:" + Guid.NewGuid().ToString()
+				});
 
-					GlobalStorage.DataBaseConnection?.GetDatabase(GlobalStorage.Name).GetCollection<AccountData>("Accounts").InsertOne(new AccountData
-					{
-						Email = message.Email.ToLower(),
-						Password = message.Password,
-						UserName = message.UserName.ToLower(),
-						DisplayName = message.DisplayName,
-						Token = accountToken,
-						EmailVerified = false,
-						Identifier = "a:" + Guid.NewGuid().ToString()
-					});
-
-					connection.Send("account:register _reply:success", new AccountRegisterSuccessMessage
-					{
-						Token = accountToken
-					});
-					return;
-				}
+				connection.Send("account:register _reply:success", new AccountRegisterSuccessMessage
+				{
+					Token = accountToken
+				});
 			});
 		}
     }

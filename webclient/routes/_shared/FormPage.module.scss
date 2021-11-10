@@ -23,3 +23,18 @@
 		margin: 0 0 10px 0;
 	}
 }
+
+.link {
+	font-size: 13px;
+	margin-bottom: 5px;
+
+	& > a {
+		color: $themeDarker;
+		text-decoration: none;
+		border-bottom: 1px solid $accent;
+
+		&:hover {
+			color: $accent;
+		}
+	}
+}

@@ -16,6 +16,8 @@ export class AxeriApi {
 	public guild: Guild;
 	public transportToken: TransportToken;
 
+	public ready = false;
+
 	public constructor(settings: AxeriApiSettings = {}) {
 		settings = deepmerge <AxeriApiSettings>({
 			port: 1427
@@ -30,11 +32,13 @@ export class AxeriApi {
 		this.transportToken = new TransportToken(this.api);
 
 		this.api.onOpen(() => {
+			this.ready = true;
 			this.triggerOnReadyEvents();
 		});
 
 		// TODO: Wait for OnReady support for ExolixAPI
 		//this.api.onReady(() => {
+		//  this.ready = true;
 		//	this.triggerOnReadyEvents();
 		//});
 	}

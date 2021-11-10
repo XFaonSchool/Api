@@ -11,8 +11,8 @@ namespace Api.Handlers.Account.Login
 {
 	public class LoginDetails
 	{
-		public string? EmailUserName = null;
-		public string? Password = null;
+		public string EmailUserName = "";
+		public string Password = "";
 	}
 
 	public class LoginSuccessResponse
@@ -32,39 +32,38 @@ namespace Api.Handlers.Account.Login
 			connection.OnMessage("account:login-get-token", (raw) =>
 			{
 				LoginDetails message = JsonHandler.Parse<LoginDetails>(raw);
-				if (message.EmailUserName != null && message.Password != null) {
-					if (message.EmailUserName.Contains("@"))
+
+				if (message.EmailUserName.Contains("@"))
+				{
+					// TODO: For Email
+					return;
+				}
+
+				var userAccount = GlobalStorage.DataBaseConnection?.GetDatabase(GlobalStorage.Name).GetCollection<AccountData>("Accounts").Find(Builders<AccountData>.Filter.Where((x) => x.UserName == message.EmailUserName)).ToList();
+
+				if (userAccount?.Count == 1)
+				{
+					// TODO: Handle encryption
+					if (userAccount[0].Password == message.Password)
 					{
-						// TODO: For Email
-						return;
-					}
-
-					var userAccount = GlobalStorage.DataBaseConnection?.GetDatabase(GlobalStorage.Name).GetCollection<AccountData>("Accounts").Find(Builders<AccountData>.Filter.Where((x) => x.UserName == message.EmailUserName)).ToList();
-
-					if (userAccount?.Count == 1)
-					{
-						// TODO: Handle encryption
-						if (userAccount[0].Password == message.Password)
+						connection.Send<LoginSuccessResponse>("account:login-get-token _reply:success", new LoginSuccessResponse
 						{
-							connection.Send<LoginSuccessResponse>("account:login-get-token _reply:success", new LoginSuccessResponse
-							{
-								Token = userAccount[0].Token
-							});
-							return;
-						}
-
-						connection.Send<LoginErrorResponse>("account:login-get-token _reply:bad-auth", new LoginErrorResponse
-						{
-							EmailUsername = message.EmailUserName
+							Token = userAccount[0].Token
 						});
 						return;
 					}
 
-					connection.Send<LoginErrorResponse>("account:login-get-token _reply:does-not-exist", new LoginErrorResponse
+					connection.Send<LoginErrorResponse>("account:login-get-token _reply:bad-auth", new LoginErrorResponse
 					{
 						EmailUsername = message.EmailUserName
 					});
+					return;
 				}
+
+				connection.Send<LoginErrorResponse>("account:login-get-token _reply:does-not-exist", new LoginErrorResponse
+				{
+					EmailUsername = message.EmailUserName
+				});
 			}); 
 		}
 	}

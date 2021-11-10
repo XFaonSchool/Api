@@ -30,7 +30,7 @@ export class Account {
 	private onLoginGetTokenSuccessEvents: ((token: string) => void)[] = [];
 	private onLoginTokenSuccessEvents: (() => void)[] = [];
 	private onLoginTokenFailedEvents: ((reason: "already-logged-in" | "invalid") => void)[] = [];
-	private onLoginGetTokenFailedEvents: ((reason: "bad-auth" | "invalid-account") => void)[] = [];
+	private onLoginGetTokenFailedEvents: ((reason: "bad-auth" | "invalid-account" | "missing-user-name-email") => void)[] = [];
 
 	public isLoggedIn = false;
 
@@ -48,6 +48,7 @@ export class Account {
 		this.api.onMessage<LoginGetTokenMessage>("account:login-get-token _reply:success", (message) => this.triggerOnLoginGetTokenSuccess(message.Token));
 		this.api.onMessage<LoginErrorResponse>("account:login-get-token _reply:bad-auth", (message) => this.triggerOnLoginGetTokenFailedEvents("bad-auth"));
 		this.api.onMessage<LoginErrorResponse>("account:login-get-token _reply:does-not-exist", (message) => this.triggerOnLoginGetTokenFailedEvents("invalid-account"));
+		this.api.onMessage<LoginErrorResponse>("account:login-get-token _reply:missing-user-name-email", (message) => this.triggerOnLoginGetTokenFailedEvents("missing-user-name-email"));
 	}
 
 	public registerNew(details: AccountRegisterDetails) {
@@ -88,7 +89,7 @@ export class Account {
 		this.onLoginGetTokenFailedEvents.push(action);
 	}
 
-	private triggerOnLoginGetTokenFailedEvents(reason: "bad-auth" | "invalid-account") {
+	private triggerOnLoginGetTokenFailedEvents(reason: "bad-auth" | "invalid-account" | "missing-user-name-email") {
 		this.onLoginGetTokenFailedEvents.forEach((event) => event(reason));
 	}
 

@@ -10,7 +10,18 @@ const api = new AxeriApi({
 	port: 7090
 });
 
-api.run();
+let onApiReady = () => { };
+
+api.onReady(() => {
+	onApiReady();
+});
+
+function startApiConnection() {
+	api.run();
+}
+
+export { api };
+startApiConnection();
 
 const lightTheme = createTheme({
 	palette: {
@@ -87,8 +98,6 @@ function paletteToScss() {
 	for (let key in currentTheme.palette) {
 		config += "$" + key + ": var(--" + key + ");\n";
 	}
-
-	console.log(config);
 }
 
 function _App({ Component, pageProps }: AppProps) {
@@ -97,7 +106,6 @@ function _App({ Component, pageProps }: AppProps) {
 			<div suppressHydrationWarning>
 				<Head>
 					<title>Axeri</title>
-
 				</Head>
 
 				{typeof window == 'undefined' ? null : insertStylesToDom()}
