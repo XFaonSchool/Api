@@ -24,6 +24,10 @@ export class Guild {
 		});
 	}
 
+	public getAllCurrent() {
+		this.api.send("")
+    }
+
 	public onJoinSuccess(action: (identifier: string) => void) {
 		this.onJoinSuccessEvents.push(action);
 	}
