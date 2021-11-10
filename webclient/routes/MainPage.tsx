@@ -11,7 +11,7 @@ api.account.onLoginTokenSuccess(() => {
 	onLoginStateUpdated("loggedIn");
 });
 
-function tryLogin() {
+export function tryLogin() {
 	if (api.ready) {
 		api.account.loginToken(localStorage.getItem("token"));
 	}
@@ -21,6 +21,10 @@ api.onReady(() => {
 	if (typeof window != "undefined") {
 		tryLogin();
 	}
+});
+
+api.guild.onGetAllCurrent((guilds) => {
+	console.log(guilds);
 });
 
 export function MainPage() {
@@ -35,6 +39,10 @@ export function MainPage() {
 	tryLogin();
 	onLoginStateUpdated = (newState: any) => {
 		setLoggedInState(newState);
+
+		if (newState == "loggedIn") {
+			api.guild.getAllCurrent();
+        }
     }
 
 	return (

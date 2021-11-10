@@ -1,4 +1,4 @@
-import { DefaultButton, isIOS, Label, MessageBar, MessageBarType, PrimaryButton, Stack, TextField } from "@fluentui/react";
+import { DefaultButton, Dialog, DialogFooter, isIOS, Label, MessageBar, MessageBarType, Modal, PrimaryButton, Stack, TextField } from "@fluentui/react";
 import * as React from "react";
 import FormPage from "../_shared/FormPage.module.scss";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -14,12 +14,6 @@ api.account.onLoginGetTokenSuccess((token) => onLoginSuccess(token));
 export function Login() {
 	const navigate = useNavigate();
 	const query = new URLSearchParams(useLocation().search);
-
-	function checkLoggedIn() {
-		if (localStorage.getItem("token")) {
-			navigate("/login/logged-in");
-        }
-    }
 
 	function getRedirectReason(reason: string, action: (reason: string) => any): string | null {
 		let answer = null as string;
@@ -91,7 +85,13 @@ export function Login() {
 
 	return (
 		<div className={FormPage.root}>
-			{checkLoggedIn()}
+			<Dialog hidden={localStorage.getItem("token") ? false : true} title="You're already logged in!">
+				You're already logged in. You can return to home
+
+				<DialogFooter>
+					<PrimaryButton onClick={() => navigate("/")}>Return To Home</PrimaryButton>
+				</DialogFooter>
+			</Dialog>
 
 			<div className={FormPage.content}>
 				{getRedirectReason(query.get("redirect-reason"), (reason) => <MessageBar messageBarType={MessageBarType.info}>{reason}</MessageBar>)}

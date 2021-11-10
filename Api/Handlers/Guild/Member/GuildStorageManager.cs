@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Api.Handlers.Account;
 using Exolix.ApiHost;
 using MongoDB.Driver;
+using Exolix.Terminal;
 
 namespace Api.Handlers.Guild.Member
 {
@@ -30,6 +31,7 @@ namespace Api.Handlers.Guild.Member
 							.Where((x) => x.UserIdentifier == userIdentifier))
 						.ToList().ToArray() ?? Array.Empty<GuildMember>();
 
+					Logger.Info("Fetched all guilds");
 					connection.Send("guild:get-all-current _reply", new GuildGetAllCurrentResponse
 					{
 						Guilds = guilds
