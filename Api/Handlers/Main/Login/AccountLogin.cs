@@ -69,6 +69,7 @@ namespace Api.Handlers.Main.Login
 
 					if (accountData != null)
 					{
+						Console.WriteLine("Insert");
 						GlobalStorage.DataBaseConnection?
 							.GetDatabase(GlobalStorage.Name)
 							.GetCollection<OnlineInstance>("OnlineInstances")
