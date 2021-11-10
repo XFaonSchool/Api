@@ -15,6 +15,7 @@ namespace Api.Handlers.Guild
 			GlobalStorage.Api?.OnOpen((connection) =>
 			{
 				_ = new GuildJoinManager(connection);
+				_ = new GuildStorageManager(connection);
 			});
 		}
 	}

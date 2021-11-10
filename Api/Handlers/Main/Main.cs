@@ -20,7 +20,7 @@ namespace Api.Handlers.Main
 					GlobalStorage.DataBaseConnection?
 						.GetDatabase(GlobalStorage.Name)
 						.GetCollection<OnlineInstance>("OnlineInstances")
-						.DeleteOne(Builders<OnlineInstance>.Filter.Where((x) => x.Node == GlobalStorage.Api.ListeningAddress && x.ConnectionIdentifier == closedInstance.Identifier));
+						.DeleteMany(Builders<OnlineInstance>.Filter.Where((x) => x.Node == GlobalStorage.Api.ListeningAddress && x.ConnectionIdentifier == closedInstance.Identifier));
 
 					Logger.Info($"Connection closed from '{closedInstance.RemoteAddress}'");
 				});

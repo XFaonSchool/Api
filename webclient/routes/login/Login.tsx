@@ -1,4 +1,4 @@
-import { DefaultButton, isIOS, MessageBar, MessageBarType, PrimaryButton, Stack, TextField } from "@fluentui/react";
+import { DefaultButton, isIOS, Label, MessageBar, MessageBarType, PrimaryButton, Stack, TextField } from "@fluentui/react";
 import * as React from "react";
 import FormPage from "../_shared/FormPage.module.scss";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -100,9 +100,13 @@ export function Login() {
 					<h1>Login</h1>
 					<br />
 
-					<TextField placeholder="Your UserName or Email" errorMessage={loginErrors.userNameEmail} name="user-name-email" label="UserName or Email" underlined />
+					<Label>UserName or Email</Label>
+					<TextField placeholder="Your UserName or Email" errorMessage={loginErrors.userNameEmail} name="user-name-email" underlined />
+
 					<br />
-					<TextField placeholder="Your Password" errorMessage={loginErrors.password} name="password" canRevealPassword label="Password" type="password" underlined />
+
+					<Label>Password</Label>
+					<TextField placeholder="Your Password" errorMessage={loginErrors.password} name="password" canRevealPassword type="password" underlined />
 
 					<br />
 					<Stack horizontal horizontalAlign="space-between">

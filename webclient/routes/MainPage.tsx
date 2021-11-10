@@ -2,7 +2,8 @@ import * as React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../pages/_app";
-import { Spinner } from "@fluentui/react";
+import { ProgressIndicator, Spinner } from "@fluentui/react";
+import { AppLayout } from "./_shared/AppLayout/AppLayout";
 
 let onLoginStateUpdated = (newState: string) => { };
 
@@ -26,7 +27,7 @@ export function MainPage() {
 	const [loggedIn, setLoggedInState] = useState<"checking" | "loggedIn" | "loggedOut">("checking");
 	const navigate = useNavigate();
 
-	if (!loggedIn) {
+	if (!localStorage.getItem("token")) {
 		navigate("/login?redirect-reason=not-logged-in");
 		return (<></>);
 	}
@@ -38,12 +39,9 @@ export function MainPage() {
 
 	return (
 		<div className="_page_main-page">
-			<h2>{
-				loggedIn == "checking"
-					? <Spinner labelPosition="right" label="Logging In" />
-					: "You are logged in"
-			}</h2>
-			{!loggedIn ? <p>You are not logged in, redirecting in 3 seconds</p> : ""}
+			<AppLayout>
+				<h1>Hello</h1>
+			</AppLayout>
 		</div>
 	);
 }
