@@ -29,7 +29,7 @@ export class Account {
 	private onRegisterSuccessEvents: ((token: string) => void)[] = [];
 	private onLoginGetTokenSuccessEvents: ((token: string) => void)[] = [];
 	private onLoginTokenSuccessEvents: (() => void)[] = [];
-	private onLoginTokenFailedEvents: ((reason: "already-logged-in" | "invalid") => void)[] = [];
+	private onLoginTokenFailedEvents: ((reason: "already-logged-in" | "invalid" | "already-trying-login") => void)[] = [];
 	private onLoginGetTokenFailedEvents: ((reason: "bad-auth" | "invalid-account" | "missing-user-name-email") => void)[] = [];
 
 	public isLoggedIn = false;
@@ -44,6 +44,7 @@ export class Account {
 		this.api.onMessage("login _reply:success", () => this.triggerOnLoginTokenSuccess());
 		this.api.onMessage("login _reply:invalid", () => this.triggerOnLoginTokenFailedEvents("invalid"));
 		this.api.onMessage("login _reply:already-logged-in", () => this.triggerOnLoginTokenFailedEvents("already-logged-in"));
+		this.api.onMessage("login _reply:already-trying-login", () => this.triggerOnLoginTokenFailedEvents("already-trying-login"));
 
 		this.api.onMessage<LoginGetTokenMessage>("account:login-get-token _reply:success", (message) => this.triggerOnLoginGetTokenSuccess(message.Token));
 		this.api.onMessage<LoginErrorResponse>("account:login-get-token _reply:bad-auth", (message) => this.triggerOnLoginGetTokenFailedEvents("bad-auth"));
@@ -98,11 +99,11 @@ export class Account {
 		this.onLoginTokenSuccessEvents.forEach((event) => event());
 	}
 
-	public onLoginTokenFailed(action: (reason: "already-logged-in" | "invalid") => void) {
+	public onLoginTokenFailed(action: (reason: "already-logged-in" | "invalid" | "already-trying-login") => void) {
 		this.onLoginTokenFailedEvents.push(action);
 	}
 
-	private triggerOnLoginTokenFailedEvents(reason: "already-logged-in" | "invalid") {
+	private triggerOnLoginTokenFailedEvents(reason: "already-logged-in" | "invalid" | "already-trying-login") {
 		this.isLoggedIn = false;
 		this.onLoginTokenFailedEvents.forEach((event) => event(reason));
 	}

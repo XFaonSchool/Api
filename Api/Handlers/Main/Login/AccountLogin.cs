@@ -38,14 +38,19 @@ namespace Api.Handlers.Main.Login
 
 	public class AccountLogin
 	{
-		private ApiConnection Connection;
+		private List<ApiConnection> ConnectionsTryingLogin = new();
 
 		public AccountLogin(ApiConnection connection)
 		{
-			Connection = connection;
-
 			connection.OnMessage("login", (raw) =>
 			{
+				if (ConnectionsTryingLogin.Find(x => x.Identifier == connection.Identifier) != null)
+				{
+					connection.Send("login _reply:already-trying-login", new { });
+					return;
+				}
+
+				ConnectionsTryingLogin.Add(connection);
 				LoginMessage message = JsonHandler.Parse<LoginMessage>(raw);
 
 				List<OnlineInstance>? loggedInRecords = GlobalStorage.DataBaseConnection?
@@ -58,6 +63,7 @@ namespace Api.Handlers.Main.Login
 
 				if (loggedInRecords?.Count > 0)
 				{
+					ConnectionsTryingLogin.Remove(connection);
 					connection.Send("login _reply:already-logged-in", new { });
 					return;
 				}
@@ -78,14 +84,15 @@ namespace Api.Handlers.Main.Login
 									UserIdentifier = accountData.Identifier,
 									Node = GlobalStorage.Api!.ListeningAddress,
 									ConnectionIdentifier = connection.Identifier
-								}
-							);
+								});
 
+						ConnectionsTryingLogin.Remove(connection);
 						DebugLogger.Info("An account logged in from '" + connection.RemoteAddress + "', user identifier '" + accountData.Identifier + "', and connection identifier '" + connection.Identifier + "'");
 						connection.Send("login _reply:success", new LoginSuccessMessage { });
 					}
 				} catch (Exception)
 				{
+					ConnectionsTryingLogin.Remove(connection);
 					connection.Send("login _reply:invalid", new LoginFailedMessage { });
 				}
 			});
