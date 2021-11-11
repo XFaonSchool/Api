@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { api } from "../pages/_app";
 import { DefaultButton, Dialog, DialogFooter, PrimaryButton, ProgressIndicator, Spinner } from "@fluentui/react";
 import { AppLayout } from "./_shared/AppLayout/AppLayout";
+import { GuildProfile } from "../../apiNodeClient/Guild/Guild";
 
 let onLoginStateUpdated = (newState: string) => { };
 let onLoginError = (message: string, error: string) => { };
@@ -39,8 +40,10 @@ api.onReady(() => {
 	}
 });
 
+let guildsFetched = (guilds: GuildProfile[]) => { };
+
 api.guild.onGetAllCurrent((guilds) => {
-	console.log(guilds);
+	guildsFetched(guilds);
 });
 
 export function MainPage() {
@@ -49,6 +52,11 @@ export function MainPage() {
 	const [loginError, setLoginError] = useState<false | string>(false);
 	const [loginErrorReason, setErrorReason] = useState("");
 	const navigate = useNavigate();
+	const [guilds, setGuilds] = useState<any>([]);
+
+	guildsFetched = (g) => {
+		setGuilds(g);
+	}
 
 	onLoginError = (error, reason) => {
 		console.error("Err: " + reason);
@@ -67,8 +75,8 @@ export function MainPage() {
 
 		if (newState == "loggedIn") {
 			api.guild.getAllCurrent();
-        }
-    }
+		}
+	}
 
 	return (
 		<div className="_page_main-page">
@@ -83,7 +91,12 @@ export function MainPage() {
 					</DialogFooter>
 				</Dialog>
 
-				<h1>Hello</h1>
+				<h1>Guilds</h1>
+
+				{guilds?.map((g) => {
+					return <p>Guild: {g.DisplayName}</p>
+				})}
+
 				<PrimaryButton onClick={() => tryLogin()}>Try Login</PrimaryButton>
 			</AppLayout>
 		</div>
