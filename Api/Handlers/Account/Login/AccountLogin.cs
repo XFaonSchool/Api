@@ -22,7 +22,7 @@ namespace Api.Handlers.Account.Login
 
 	public class LoginErrorResponse
 	{
-		public string EmailUsername = "";
+		public string EmailUserName = "";
 	}
 
     public class AccountLogin
@@ -55,14 +55,14 @@ namespace Api.Handlers.Account.Login
 
 					connection.Send<LoginErrorResponse>("account:login-get-token _reply:bad-auth", new LoginErrorResponse
 					{
-						EmailUsername = message.EmailUserName
+						EmailUserName = message.EmailUserName
 					});
 					return;
 				}
 
 				connection.Send<LoginErrorResponse>("account:login-get-token _reply:does-not-exist", new LoginErrorResponse
 				{
-					EmailUsername = message.EmailUserName
+					EmailUserName = message.EmailUserName
 				});
 			}); 
 		}
