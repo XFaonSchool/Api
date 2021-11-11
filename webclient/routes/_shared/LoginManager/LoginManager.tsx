@@ -3,7 +3,6 @@ import { useState } from "react";
 import { api } from "../../../pages/_app";
 
 let isLoggedIn = false;
-let apiReadyOnInit = api.ready;
 
 const events = {
     onLoginSuccess: () => { },
@@ -19,10 +18,6 @@ function runLoggin() {
     if (!isLoggedIn && api.ready) {
         api.account.loginToken("tok.en");
     }
-}
-
-if (!apiReadyOnInit) {
-    api.onReady(() => runLoggin());
 }
 
 export function LoginManager() {
